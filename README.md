@@ -1,2 +1,2 @@
-# QinZhi2022.giuhub.io
+# QinZhi2022.github.io
 My first Blog
