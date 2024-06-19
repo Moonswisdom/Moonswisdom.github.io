@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/CMake%E5%AD%A6%E4%B9%A0/image-20240619210330403.png">
 <meta property="article:published_time" content="2024-06-06T11:59:05.343Z">
-<meta property="article:modified_time" content="2024-06-19T13:21:24.193Z">
+<meta property="article:modified_time" content="2024-06-19T13:23:30.550Z">
 <meta property="article:author" content="Qinzhi2022">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://yoursite.com/CMake%E5%AD%A6%E4%B9%A0/image-20240619210330403.png">
@@ -401,7 +401,7 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">mian</span><span class="hljs-params">()</span></span>&#123;<br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> DEBUG</span><br>    cout &lt;&lt; <span class="hljs-string">&quot;DEBUG&quot;</span> &lt;&lt; endl;<br><span class="hljs-meta">#<span class="hljs-keyword">else</span></span><br>    cout &lt;&lt; <span class="hljs-string">&quot;CORRECT&quot;</span> &lt;&lt; endl;<br><span class="hljs-meta">#endef</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>在生成程序是可以指定该宏是否定义</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs linux">g++ *.cpp -DEBUG -o app<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs linux">g++ *.cpp -DDEBUG -o app<br></code></pre></td></tr></table></figure>
 
 <p>在cmake中可以使用<code>add_definitions(-D宏名字)</code></p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cmake">cmake_minimun_require(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(exam)<br><br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">11</span>)<br><span class="hljs-keyword">file</span>(GLOB SRC_LIST <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/*.cpp)<br><br><span class="hljs-keyword">add_definitions</span>(-DDEBUG)<br><span class="hljs-keyword">add_executable</span>(app <span class="hljs-variable">$&#123;SRC_LISt&#125;</span>)<br></code></pre></td></tr></table></figure>
