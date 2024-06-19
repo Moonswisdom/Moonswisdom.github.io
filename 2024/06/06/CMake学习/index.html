@@ -1,0 +1,756 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Qinzhi2022">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="项目构建工具，相似的makefile cmake流程：项目 –&gt; CmakeList.txt –&gt; cmake –&gt; makefile –&gt; make –&gt; exe CMake 使用1 基础命令1、注释： 行注释#   块注释#[[内容]] 2、cmake_minimum_required 指定 camke 的最低版本 3、project 项目内容 1project(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CMake学习笔记">
+<meta property="og:url" content="http://yoursite.com/2024/06/06/CMake%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Moonswisdom">
+<meta property="og:description" content="项目构建工具，相似的makefile cmake流程：项目 –&gt; CmakeList.txt –&gt; cmake –&gt; makefile –&gt; make –&gt; exe CMake 使用1 基础命令1、注释： 行注释#   块注释#[[内容]] 2、cmake_minimum_required 指定 camke 的最低版本 3、project 项目内容 1project(">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2024/06/06/CMake%E5%AD%A6%E4%B9%A0/Users/12143/Moonlights/source_posts/CMake%E5%AD%A6%E4%B9%A0/image-20240619210330403.png">
+<meta property="article:published_time" content="2024-06-06T11:59:05.343Z">
+<meta property="article:modified_time" content="2024-06-19T13:18:19.494Z">
+<meta property="article:author" content="Qinzhi2022">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/2024/06/06/CMake%E5%AD%A6%E4%B9%A0/Users/12143/Moonlights/source_posts/CMake%E5%AD%A6%E4%B9%A0/image-20240619210330403.png">
+  
+  
+  
+  <title>CMake学习笔记 - Moonswisdom</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Moonswisdom</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bloginit.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="CMake学习笔记"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-06-06 19:59" pubdate>
+          2024年6月6日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">CMake学习笔记</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>项目构建工具，相似的makefile</p>
+<p>cmake流程：项目 –&gt; CmakeList.txt –&gt; cmake –&gt; makefile –&gt; make –&gt; exe</p>
+<h1 id="CMake-使用"><a href="#CMake-使用" class="headerlink" title="CMake 使用"></a>CMake 使用</h1><h3 id="1-基础命令"><a href="#1-基础命令" class="headerlink" title="1 基础命令"></a>1 基础命令</h3><p>1、注释： 行注释#   块注释#[[内容]]</p>
+<p>2、<code>cmake_minimum_required</code> 指定 camke 的最低版本</p>
+<p>3、<code>project</code> 项目内容</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">project</span>(&lt;<span class="hljs-keyword">project</span>-name&gt; [languages &lt;language-name&gt;]) <span class="hljs-comment">#项目名，语言</span><br></code></pre></td></tr></table></figure>
+
+<p>4、<code>add_executable</code> 定义生可执行程序</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake">add_excutable(可执行程序名 源文件名<span class="hljs-number">1</span> 源文件名<span class="hljs-number">2</span> 源文件<span class="hljs-number">3</span>)<br>add_excutable(可执行程序名 源文件名<span class="hljs-number">1</span>;源文件名<span class="hljs-number">2</span>;源文件<span class="hljs-number">3</span>)  <span class="hljs-comment">#”空格“和”;“分割均可</span><br></code></pre></td></tr></table></figure>
+
+<p>5、cmake执行</p>
+<p><strong>example 1</strong> </p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-comment">#CMakeLists.txt 文件内容如下</span><br><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(exam)<br><span class="hljs-keyword">add_executable</span>(app add.cpp sub.cpp mul.cpp divdd.cpp main.cpp)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-comment">#终端输入如下</span><br>cmake <span class="hljs-string">&quot;path&quot;</span>	<span class="hljs-comment">#path 为CMakeLists.txt的路径，当前文件夹就是 .</span><br><span class="hljs-comment">#cmake生成Makefile文件</span><br>make	<span class="hljs-comment">#执行Makefile文件生成可执行程序</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-设置"><a href="#2-设置" class="headerlink" title="2 设置"></a>2 设置</h3><p>1、<code>SET(VAR [VALUE])</code>	#VAR 变量名; VALUE 变量值</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(SRC_LIST add.cpp sub.cpp mul.cpp divdd.cpp main.cpp)	<span class="hljs-comment">#空格 分号 间隔均可</span><br><span class="hljs-keyword">add_executable</span>(app <span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>2、c++标准	#默认c++98</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-comment">#在CMakeLists.txt文件中使用set设置</span><br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">11</span>)	<span class="hljs-comment">#指定标准为c++11</span><br><br><span class="hljs-comment">#在终端通过指令设置</span><br>cmake <span class="hljs-string">&quot;path&quot;</span> -D CMAKE_CXX_STANDARD=<span class="hljs-number">11</span>	<span class="hljs-comment">#-D 表示给宏赋值</span><br></code></pre></td></tr></table></figure>
+
+<p>3、输出路径	#设置可执行程序的输出路径</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(HOME /home/moonlight/CMake_exam1)	<span class="hljs-comment">#绝对路径</span><br><span class="hljs-keyword">set</span>(EXECUTABLE_OUTPUT_PATH <span class="hljs-variable">$&#123;HOME&#125;</span>/bin) <span class="hljs-comment">#bin目录不存在会自动生成</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>example 2</strong></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-comment">#CMakeLists.txt 文件内容如下</span><br><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(exam)<br><br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">11</span>)		<span class="hljs-comment">#设置c++11标准</span><br><span class="hljs-keyword">set</span>(SRC_LIST add.cpp sub.cpp mul.cpp divdd.cpp main.cpp)	<span class="hljs-comment">#将文件名赋给变量</span><br><span class="hljs-keyword">set</span>(HOME /home/moonlight/CMake_exam1)<br><span class="hljs-keyword">set</span>(EXECUTABLE_OUTPUT_PATH <span class="hljs-variable">$&#123;HOME&#125;</span>/bin)		<span class="hljs-comment">#设置可执行文件的输出路径</span><br><br><span class="hljs-keyword">add_executable</span>(app <span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-搜索"><a href="#3-搜索" class="headerlink" title="3 搜索"></a>3 搜索</h3><p>1、<code>aux_source_directory</code> 	#查找某个路径下的所有源文件</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">aux_source_directory</span>(&lt;dir&gt; &lt;variable&gt;)	<span class="hljs-comment">#dir 目录	#variable 存储变量</span><br><br><span class="hljs-keyword">aux_source_directory</span>(<span class="hljs-variable">$&#123;PROJECT_SOURCE_DIR&#125;</span> SRC) <span class="hljs-comment"># PROJECT_SOURCE_DIR 表示cmake输入的path</span><br></code></pre></td></tr></table></figure>
+
+<p>2、<code>file</code></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">file</span>(GLOB/GLOB_RECURSE 变量名 搜索的文件路径或类型)	<span class="hljs-comment">#GLOB 表示读文件名列表，READ 读文件内容</span><br><br><span class="hljs-keyword">file</span>(GLOB MAIN_SRC <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/*.cpp)	<br><span class="hljs-keyword">file</span>(GLOB MAIN_HEAD <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/<span class="hljs-keyword">include</span>/*.h)<br><span class="hljs-comment"># CAMKE_CURRENT_SOURCE_DIR 表示CMakeLists.txt所在的文件目录</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>example 3</strong></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-comment">#CMakeLists.txt 文件内容如下</span><br><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(exam)<br><br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">11</span>)		<span class="hljs-comment">#设置c++11标准</span><br><span class="hljs-keyword">include_directories</span>(<span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/<span class="hljs-keyword">include</span>)	<span class="hljs-comment">#包含头文件所在的文件夹，可多个</span><br><br><span class="hljs-keyword">file</span>(GLOB SRC_LIST <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/*.cpp)	<span class="hljs-comment">#搜索文件名赋给变量</span><br><span class="hljs-comment">#aux_source_directory(./ SRL_LIST) #也是搜索当前文件夹文件的命令</span><br><br><span class="hljs-keyword">set</span>(HOME /home/moonlight/CMake_exam1)<br><span class="hljs-keyword">set</span>(EXECUTABLE_OUTPUT_PATH <span class="hljs-variable">$&#123;HOME&#125;</span>/bin)		<span class="hljs-comment">#设置可执行文件的输出路径</span><br><br><span class="hljs-keyword">add_executable</span>(app <span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-制作库"><a href="#4-制作库" class="headerlink" title="4 制作库"></a>4 制作库</h3><p>1、制作	#将库文件和头文件使用</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">add_library</span>(NAME STATIC 源文件<span class="hljs-number">1</span> 源文件<span class="hljs-number">2</span> 源文件<span class="hljs-number">3</span>)		<span class="hljs-comment">#STATIC生成静态库lib + name + .a</span><br><span class="hljs-keyword">add_library</span>(NAME SHARED 源文件<span class="hljs-number">1</span> 源文件<span class="hljs-number">2</span> 源文件<span class="hljs-number">3</span>)		<span class="hljs-comment">#SHARED生成动态库lib + name + .so</span><br></code></pre></td></tr></table></figure>
+
+<p> 2、指定库路径</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(LIBRARY_OUTPUT_PATH /home/moonlight/<span class="hljs-keyword">test</span>) <span class="hljs-comment">#库路径</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>example 4.1</strong></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-comment">#CMakeLists.txt 文件内容如下</span><br><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(exam)<br><br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">11</span>)		<span class="hljs-comment">#设置c++11标准</span><br><span class="hljs-keyword">include_directories</span>(<span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/<span class="hljs-keyword">include</span>)	<span class="hljs-comment">#包含头文件所在的文件夹，可多个</span><br><br><span class="hljs-keyword">file</span>(GLOB SRC_LIST <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/*.cpp)	<span class="hljs-comment">#搜索文件名赋给变量</span><br><br><span class="hljs-keyword">set</span>(HOME <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>)<br><span class="hljs-keyword">set</span>(LIBRARY_OUTPUT_PATH <span class="hljs-variable">$&#123;HOME&#125;</span>/lib_)		<span class="hljs-comment">#设置库文件的输出路径</span><br><br><br><br><span class="hljs-comment">#制作静态库</span><br><span class="hljs-keyword">add_library</span>(calc STATIC <span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br><span class="hljs-comment">#制作动态库</span><br><span class="hljs-keyword">add_library</span>(calc SHARED <span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-使用库"><a href="#5-使用库" class="headerlink" title="5 使用库"></a>5 使用库</h3><p>1、链接</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-comment">#静态库链接</span><br><span class="hljs-keyword">link_libraries</span>(&lt;static lib1&gt; &lt;static lib2&gt; ...) <span class="hljs-comment">#指定库路径，可多个，名字lib name .a可只要name</span><br><br><span class="hljs-comment">#链接路径</span><br><span class="hljs-keyword">link_directories</span>(&lt;lib path&gt;) <span class="hljs-comment">#静态库 动态库 均可</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-comment">#动态库链接</span><br><span class="hljs-keyword">target_link_libraries</span>(&lt;<span class="hljs-keyword">target</span>&gt; [&lt;private/public/interface&gt; &lt;item&gt;] ...) <br><span class="hljs-comment">#可指定权限，默认public，库具有传递性</span><br><span class="hljs-comment">#public: 可以多重传递使用</span><br><span class="hljs-comment">#private: 仅第一层链接可以知道库中内容及归属</span><br><span class="hljs-comment">#interface：仅第一层链接可使用，但不清楚内部情况</span><br><br><span class="hljs-comment">#先生成程序，后链接动态库</span><br><span class="hljs-keyword">add_executable</span>(app <span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br><span class="hljs-keyword">target_link_libraries</span>(app calc)<br></code></pre></td></tr></table></figure>
+
+<p><strong>example 5</strong></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-comment">#CMakeLists.txt 文件内容如下</span><br><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(exam)<br><br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">11</span>)		<span class="hljs-comment">#设置c++11标准</span><br><span class="hljs-keyword">include_directories</span>(<span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/<span class="hljs-keyword">include</span>)	<span class="hljs-comment">#包含头文件所在的文件夹，可多个</span><br><br><span class="hljs-keyword">file</span>(GLOB SRC_LIST <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/*.cpp)	<span class="hljs-comment">#搜索文件名赋给变量</span><br><br><span class="hljs-keyword">set</span>(HOME <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>)<br><span class="hljs-keyword">set</span>(EXECUTABLE_OUTPUT_PATH <span class="hljs-variable">$&#123;HOME&#125;</span>/bin)		<span class="hljs-comment">#设置可执行文件的输出路径</span><br><br><br><br><span class="hljs-comment">#静态库链接, 先链接后生成可执行程序</span><br><span class="hljs-keyword">link_libraries</span>(calc)		<span class="hljs-comment"># 该链接会将该静态库放到SRC_LIST列表中</span><br><span class="hljs-keyword">link_directories</span>(<span class="hljs-variable">$&#123;HOME&#125;</span>/lib_static)<br><span class="hljs-keyword">add_executable</span>(app <span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br><br><span class="hljs-comment">#动态库链接，先生成可执行程序后链接</span><br><span class="hljs-keyword">link_directories</span>(<span class="hljs-variable">$&#123;HOME&#125;</span>/lib_shared)<br><span class="hljs-keyword">add_executable</span>(app <span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br><span class="hljs-keyword">target_link_libraries</span>(app public calc)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="6-日志"><a href="#6-日志" class="headerlink" title="6 日志"></a>6 日志</h3><p>用于判断过程中是否存在部分信息错误</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">message</span>([无/STATUE/WARNING/AUTHOR_WARNING/SEND_ERROR/FATA_ERROR]: <span class="hljs-string">&quot;内容&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>无：重要信息</p>
+<p>STATUS：非重要信息</p>
+<p>WARNING：CMake警告，不会中断</p>
+<p>AUTHOR_WARNING：更严重的警告，不会中断</p>
+<p>SEND_ERROR：CMake错误，继续执行，但会跳过生成阶段</p>
+<p>FATAL_ERROR：CMake严重错误，终止运行</p>
+<h5 id="example-6"><a href="#example-6" class="headerlink" title="example 6"></a>example 6</h5><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-comment">#CMakeLists.txt 文件内容如下</span><br><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(exam)<br><br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">11</span>)		<span class="hljs-comment">#设置c++11标准</span><br><span class="hljs-keyword">include_directories</span>(<span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/<span class="hljs-keyword">include</span>)	<span class="hljs-comment">#包含头文件所在的文件夹，可多个</span><br><br><span class="hljs-keyword">file</span>(GLOB SRC_LIST <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/*.cpp)	<span class="hljs-comment">#搜索文件名赋给变量</span><br><br><span class="hljs-keyword">set</span>(EXECUTABLE_OUTPUT_PATH <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/bin)		<span class="hljs-comment">#设置可执行文件的输出路径</span><br><br><span class="hljs-keyword">message</span>(<span class="hljs-string">&quot;xxxxxx&quot;</span>)<br><span class="hljs-keyword">message</span>(STATUS <span class="hljs-string">&quot;STATUSxxxxxx&quot;</span>)<br><span class="hljs-keyword">message</span>(FATAL_ERROR <span class="hljs-string">&quot;FATALxxxxxx&quot;</span>)<br><br><span class="hljs-keyword">add_executable</span>(app <span class="hljs-variable">$&#123;SRLC_LIST&#125;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="7-字符串"><a href="#7-字符串" class="headerlink" title="7 字符串"></a>7 字符串</h3><p>1、<code>APPEND</code>拼接字符串变量</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">set</span>(变量名 <span class="hljs-variable">$&#123;变量1&#125;</span> <span class="hljs-variable">$&#123;变量2&#125;</span> <span class="hljs-variable">$&#123;变量3&#125;</span> ...)<br><br><span class="hljs-keyword">list</span>(APPEND 变量名 <span class="hljs-variable">$&#123;变量1&#125;</span> <span class="hljs-variable">$&#123;变量2&#125;</span> <span class="hljs-variable">$&#123;变量3&#125;</span> ...)	<span class="hljs-comment">#底层管理中子字符串之间隐含分号，用于分隔</span><br></code></pre></td></tr></table></figure>
+
+<p>2、<code>REMOVE_ITEM</code>移除字符串变量</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(REMOVE_ITEM 变量名 需要删除的内容)<br></code></pre></td></tr></table></figure>
+
+<h5 id="example-7"><a href="#example-7" class="headerlink" title="example 7"></a>example 7</h5><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs cmake">cmake_minimum_require(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(exam)<br><br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">11</span>)<br><span class="hljs-keyword">include_directories</span>(<span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/<span class="hljs-keyword">include</span>)<br><br><span class="hljs-keyword">file</span>(GLOB SRC_LIST <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/*.cpp)<br><br><span class="hljs-keyword">message</span>(<span class="hljs-string">&quot;==========&quot;</span>)<br><span class="hljs-keyword">message</span>(<span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br><span class="hljs-keyword">message</span>(<span class="hljs-string">&quot;==========&quot;</span>)<br><span class="hljs-keyword">list</span>(REMOVE_ITEM SRC_LIST main.cpp)<br><span class="hljs-keyword">message</span>(<span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br><span class="hljs-keyword">message</span>(<span class="hljs-string">&quot;==========&quot;</span>)<br><br><span class="hljs-keyword">set</span>(EXECUTABLE_OUTPUT_PATH <span class="hljs-variable">$&#123;CAMKE_CURRENT_SOURCE_DIR&#125;</span>/bin)<br><br><span class="hljs-keyword">add_executable</span>(app <span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br><br><span class="hljs-keyword">set</span>(tmp hello world)<br><span class="hljs-keyword">set</span>(tmp1 <span class="hljs-variable">$&#123;tmp&#125;</span> <span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br><span class="hljs-keyword">message</span>(<span class="hljs-variable">$&#123;tmp&#125;</span>)<br><span class="hljs-keyword">message</span>(<span class="hljs-variable">$&#123;tmp1&#125;</span>)<br><span class="hljs-keyword">list</span>(APPEND tmp <span class="hljs-string">&quot;a1a&quot;</span> <span class="hljs-string">&quot;c2c&quot;</span> <span class="hljs-variable">$&#123;SRC_LIST&#125;</span>)<br><span class="hljs-keyword">message</span>(<span class="hljs-variable">$&#123;tmp&#125;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>3、<code>LENGTH</code>获取长度</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(LENGTH 变量名 新的存储长度结果的字符串)<br><span class="hljs-keyword">list</span>(LENGTH SRC_LIST new_len)<br></code></pre></td></tr></table></figure>
+
+<p>4、<code>GET</code>取字符串中对应索引的子串(正向索引从0开始，反向索引从-1开始)</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(GET 变量名 位置索引 新的存储结果的字符串)	<span class="hljs-comment">#索引超出列表范围则报错</span><br><span class="hljs-keyword">list</span>(GET SRC_LIST <span class="hljs-number">0</span> new_val)	<span class="hljs-comment">#取第一个字串</span><br><span class="hljs-keyword">list</span>(GET SRC_LIST -<span class="hljs-number">1</span> new_val)	<span class="hljs-comment">#取最后一个字串</span><br></code></pre></td></tr></table></figure>
+
+<p>5、<code>JOIN</code>将列表中的子串通过连接符连接为一个字符串</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(JOIN 变量名 指定的连接符 新的字符串)<br><span class="hljs-keyword">list</span>(JOIN SRC_LIST <span class="hljs-string">&quot;xxx&quot;</span> new_str)<br></code></pre></td></tr></table></figure>
+
+<p>6、<code>FIND</code>查找</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(FIND 变量名 需要搜索的变量 存储对应字符串的索引的变量)	<span class="hljs-comment">#正向查找，没找到为-1</span><br><span class="hljs-keyword">list</span>(FIND SRC_LIST <span class="hljs-string">&quot;xxx&quot;</span> new_index)<br></code></pre></td></tr></table></figure>
+
+<p>7、<code>INSERT</code>在指定位置插入若干元素</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(INSERT 变量名 位置索引 插入的元素<span class="hljs-number">1</span> 插入的元素<span class="hljs-number">2</span> ...)<br><span class="hljs-keyword">list</span>(INSERT SRC_LIST <span class="hljs-number">1</span> <span class="hljs-string">&quot;4&quot;</span> <span class="hljs-string">&quot;5&quot;</span>)	<span class="hljs-comment">#123;456; 得 123;4;5;456</span><br></code></pre></td></tr></table></figure>
+
+<p>8、<code>PREPEND</code>在最前面插入元素</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(PREPEND 变量名 插入的元素<span class="hljs-number">1</span> ...)<br><span class="hljs-keyword">list</span>(PREPEND SRC_LIST <span class="hljs-string">&quot;0&quot;</span>)		<span class="hljs-comment">#123;456; 得 0;123;456</span><br></code></pre></td></tr></table></figure>
+
+<p>9、<code>POP_BACK</code>在最后删除元素</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(POP_BACK 变量名 可选变量)		<span class="hljs-comment">#可选变量存删除的元素值</span><br><span class="hljs-keyword">list</span>(POP_BACK SRC_LIST)			<span class="hljs-comment">#123;456 得 123</span><br></code></pre></td></tr></table></figure>
+
+<p>10、<code>POP_FRONT</code>在前面删除元素</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(POP_FRONT 变量名 可选变量)<br><span class="hljs-keyword">list</span>(POP_BACK SRC_LIST)			<span class="hljs-comment">#123;456 得 456</span><br></code></pre></td></tr></table></figure>
+
+<p>11、<code>REMOVE_AT</code>将指定索引数据删除</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(REMOVE_AT 变量名 索引<span class="hljs-number">1</span> 索引<span class="hljs-number">2</span> ...)<br><span class="hljs-keyword">list</span>(REMOVE_AT SRC_LIST <span class="hljs-number">0</span> <span class="hljs-number">1</span>)	<span class="hljs-comment">#123;456 得 空</span><br></code></pre></td></tr></table></figure>
+
+<p>12、<code>REMOVE_DUPLICATES</code>删除重复元素</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(REMOVE_DUPLICATES 变量名)<br><span class="hljs-keyword">list</span>(REMOVE_DUPLICATES SRC_LIST)	<span class="hljs-comment">#123;456;123;456 得 123;456</span><br></code></pre></td></tr></table></figure>
+
+<p>13、<code>REVERSE</code>翻转列表</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(REVERSE 变量名)<br><span class="hljs-keyword">list</span>(REVERSE SRC_LIST)<br></code></pre></td></tr></table></figure>
+
+<p>14、SORT列表排序</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">list</span>(SORT 变量名 排序方法 是否大小写敏感 排序顺序)<br><span class="hljs-keyword">list</span>(SROT SRC_LIST [COMPARE &lt;方法&gt;] [CASE &lt;敏感&gt;] [ORDER &lt;排序&gt;])<br>COMPARE		<span class="hljs-comment">#排序方法</span><br>	<span class="hljs-keyword">STRING</span>			<span class="hljs-comment">#按字符顺序进行排序</span><br>	FILE_BASENAME	<span class="hljs-comment">#按路径名排序</span><br>	NATURAL			<span class="hljs-comment">#自然数顺序排序</span><br>CASE		<span class="hljs-comment">#指明是否大小写敏感</span><br>	SENSITIVE		<span class="hljs-comment">#敏感</span><br>	INSENSITIVE		<span class="hljs-comment">#不敏感</span><br>ORDER		<span class="hljs-comment">#指定排序顺序</span><br>	ASCENDING		<span class="hljs-comment">#升序排序</span><br>	DESCENDING		<span class="hljs-comment">#降序排序</span><br></code></pre></td></tr></table></figure>
+
+<p>帮助文档：</p>
+<p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/v3.26/command/list.html">https://cmake.org/cmake/help/v3.26/command/list.html</a></p>
+<h3 id="8-宏定义"><a href="#8-宏定义" class="headerlink" title="8 宏定义"></a>8 宏定义</h3><p>用于给具有条件判断的宏程序进行指定判断宏定义，例如如下c++程序</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">mian</span><span class="hljs-params">()</span></span>&#123;<br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> DEBUG</span><br>    cout &lt;&lt; <span class="hljs-string">&quot;DEBUG&quot;</span> &lt;&lt; endl;<br><span class="hljs-meta">#<span class="hljs-keyword">else</span></span><br>    cout &lt;&lt; <span class="hljs-string">&quot;CORRECT&quot;</span> &lt;&lt; endl;<br><span class="hljs-meta">#endef</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在生成程序是可以指定该宏是否定义</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs linux">g++ *.cpp -DEBUG -o app<br></code></pre></td></tr></table></figure>
+
+<p>在cmake中可以使用<code>add_definitions(-D宏名字)</code></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cmake">cmake_minimun_require(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(exam)<br><br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">11</span>)<br><span class="hljs-keyword">file</span>(GLOB SRC_LIST <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/*.cpp)<br><br><span class="hljs-keyword">add_definitions</span>(-DDEBUG)<br><span class="hljs-keyword">add_executable</span>(app <span class="hljs-variable">$&#123;SRC_LISt&#125;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="9-嵌套CMake"><a href="#9-嵌套CMake" class="headerlink" title="9 嵌套CMake"></a>9 嵌套CMake</h3><p>最外层<code>CMakeLists.txt</code></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(exam)<br><span class="hljs-keyword">set</span>(CMAKE_CXX_STANDARD <span class="hljs-number">11</span>)<br><br><span class="hljs-comment">#定义变量</span><br><span class="hljs-comment">#静态库生成的路径</span><br><span class="hljs-keyword">set</span>(LIBPATH <span class="hljs-variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/lib)<br><span class="hljs-keyword">set</span>(EXECPATH <span class="hljs-variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/bin)<br><span class="hljs-keyword">set</span>(HEADPATH <span class="hljs-variable">$&#123;PROJECT_SOURCE_DIR&#125;</span>/<span class="hljs-keyword">include</span>)<br><span class="hljs-comment">#头文件途径</span><br><span class="hljs-keyword">set</span>(CALCLIB calc)<br><span class="hljs-keyword">set</span>(SORTLIB sort)<br><span class="hljs-comment">#库文件路径</span><br><span class="hljs-keyword">set</span>(APPNAME1 app1)<br><span class="hljs-keyword">set</span>(APPNAME2 app2)<br><br><span class="hljs-comment">#给当前节点添加子目录</span><br><span class="hljs-keyword">add_subdirectory</span>(calc)<br><span class="hljs-keyword">add_subdirectory</span>(sort)<br><span class="hljs-keyword">add_subdirectory</span>(test1)<br><span class="hljs-keyword">add_subdirectory</span>(test2)<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/06/06/CMake%E5%AD%A6%E4%B9%A0/Users\12143\Moonlights\source_posts\CMake学习\image-20240619210330403.png" srcset="/img/loading.gif" lazyload alt="image-20240619210330403"></p>
+<p><code>calc/CMakeList.txt</code></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(calc)<br><span class="hljs-keyword">aux_source_directory</span>(./ SRC)<br><span class="hljs-keyword">include_directories</span>(<span class="hljs-variable">$&#123;HEADPATH&#125;</span>)<br><span class="hljs-keyword">set</span>(LIBRARY_OUTPUT_PATH <span class="hljs-variable">$&#123;LIBPATH&#125;</span>)<br><span class="hljs-keyword">add_library</span>(<span class="hljs-variable">$&#123;CALCLIB&#125;</span> STATIC <span class="hljs-variable">$&#123;SRC&#125;</span>)<br></code></pre></td></tr></table></figure>
+
+<p><code>test1/CMakeList.txt</code></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(test1)<br><span class="hljs-keyword">aux_source_directory</span>(./ SRC)<br><span class="hljs-keyword">include_directories</span>(<span class="hljs-variable">$&#123;HEADPATH&#125;</span>)<br><span class="hljs-keyword">link_directories</span>(<span class="hljs-variable">$&#123;LIBPATH&#125;</span>)<br><span class="hljs-keyword">link_libraries</span>(<span class="hljs-variable">$&#123;CALCLIB&#125;</span>)<br><span class="hljs-keyword">set</span>(EXECUTABLE_OUTPUT_PATH <span class="hljs-variable">$&#123;EXECPATH&#125;</span>)<br><span class="hljs-keyword">add_executable</span>(<span class="hljs-variable">$&#123;APPNAME1&#125;</span> <span class="hljs-variable">$&#123;SRC&#125;</span>)<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>CMake学习笔记</div>
+      <div>http://yoursite.com/2024/06/06/CMake学习/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Qinzhi2022</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年6月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/05/26/HTTP/" title="HTTP 协议">
+                        <span class="hidden-mobile">HTTP 协议</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div>Moon&wisdom | A learning blog</div> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
