@@ -16,21 +16,28 @@
   <meta name="author" content="Qinzhi2022">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+    <meta name="description" content="C++高并发项目学习1：项目配置和前置知识">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2024/05/15/hello-world/index.html">
+<meta property="og:title" content="C++并发网络通信服务器">
+<meta property="og:url" content="http://yoursite.com/2024/07/02/C++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
 <meta property="og:site_name" content="Moonswisdom">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta property="og:description" content="C++高并发项目学习1：项目配置和前置知识">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-05-15T06:47:16.846Z">
-<meta property="article:modified_time" content="2024-07-02T13:31:11.681Z">
+<meta property="og:image" content="http://yoursite.com/C++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20240702190038719.png">
+<meta property="og:image" content="http://yoursite.com/.%5CC++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%5Cimage-20240702191701150.png">
+<meta property="og:image" content="http://yoursite.com/.%5CC++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%5Cimage-20240702194426282.png">
+<meta property="og:image" content="http://yoursite.com/.%5CC++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%5Cimage-20240702195028250.png">
+<meta property="og:image" content="http://yoursite.com/.%5CC++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%5Cimage-20240702195622555.png">
+<meta property="og:image" content="http://yoursite.com/.%5CC++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%5Cimage-20240702212421573.png">
+<meta property="article:published_time" content="2024-07-02T10:58:59.057Z">
+<meta property="article:modified_time" content="2024-07-02T13:30:28.491Z">
 <meta property="article:author" content="Qinzhi2022">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/C++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20240702190038719.png">
   
   
   
-  <title>Hello World - Moonswisdom</title>
+  <title>C++并发网络通信服务器 - Moonswisdom</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -196,7 +203,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hello World"></span>
+            <span id="subtitle" data-typed-text="C++并发网络通信服务器"></span>
           
         </div>
 
@@ -207,8 +214,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-05-15 14:47" pubdate>
-          2024年5月15日 下午
+        <time datetime="2024-07-02 18:58" pubdate>
+          2024年7月2日 晚上
         </time>
       </span>
     
@@ -219,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          18 字
+          505 字
         
       </span>
     
@@ -230,7 +237,7 @@
         
         
         
-          1 分钟
+          5 分钟
         
       </span>
     
@@ -267,26 +274,44 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Hello World</h1>
+            <h1 id="seo-header">C++并发网络通信服务器</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+                <p>C++高并发项目学习1：项目配置和前置知识</p>
 <span id="more"></span>
 
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
+<h1 id="1、项目建立"><a href="#1、项目建立" class="headerlink" title="1、项目建立"></a>1、项目建立</h1><h3 id="1-1-项目文件分类"><a href="#1-1-项目文件分类" class="headerlink" title="1.1 项目文件分类"></a>1.1 项目文件分类</h3><p>分开存储：将生成的可执行程序文件放在与项目同级的bin目录下，中间文件放在与项目同级的temp目录下</p>
+<p>${SolutionDir} 解决方案地址，${Platform} 平台x64，${Configuration} 编译器，${ProjectName}项目名</p>
+<p><img src="/./C++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8/image-20240702190038719.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/.%5CC++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%5Cimage-20240702191701150.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="1-2-项目调试方法"><a href="#1-2-项目调试方法" class="headerlink" title="1.2 项目调试方法"></a>1.2 项目调试方法</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>	<span class="hljs-type">int</span> a = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">10</span>; ++i) &#123; a = a + i; &#125;<br>	cout &lt;&lt; <span class="hljs-string">&quot;a = &quot;</span> &lt;&lt; a &lt;&lt; endl;<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
+<h5 id="1）打印数据调试"><a href="#1）打印数据调试" class="headerlink" title="1）打印数据调试"></a>1）打印数据调试</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">10</span>; ++i) &#123; a = a + i; &#125;<br><span class="hljs-keyword">if</span>(i == <span class="hljs-number">5</span>) cout &lt;&lt; <span class="hljs-string">&quot;Debug: i==5, a = &quot;</span> &lt;&lt; a &lt;&lt; endl; <span class="hljs-comment">//调试</span><br>cout &lt;&lt; <span class="hljs-string">&quot;a = &quot;</span> &lt;&lt; a &lt;&lt; endl;<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
+<h5 id="2）普通断点和条件断点"><a href="#2）普通断点和条件断点" class="headerlink" title="2）普通断点和条件断点"></a>2）普通断点和条件断点</h5><p>在代码行设置断点，右键条件，设置筛选条件为 i&#x3D;&#x3D;5，在输出窗口输出调试结果Debug: a &#x3D; {a}。</p>
+<p>{}里面是变量，$系统变量</p>
+<p><img src="/.%5CC++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%5Cimage-20240702194426282.png" srcset="/img/loading.gif" lazyload></p>
+<p>i&#x3D;&#x3D;5时，断点该语句还没执行，所以a&#x3D;10</p>
+<p><img src="/.%5CC++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%5Cimage-20240702195028250.png" srcset="/img/loading.gif" lazyload></p>
+<h5 id="3）Debug宏调试"><a href="#3）Debug宏调试" class="headerlink" title="3）Debug宏调试"></a>3）Debug宏调试</h5><p>宏选项为_DEBUG后，只有在Debug编译时才会执行，用Release时不会执行。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">10</span>; ++i) &#123; a = a + i; &#125;<br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> _DEBUG</span><br>	<span class="hljs-keyword">if</span>(i == <span class="hljs-number">5</span>) cout &lt;&lt; <span class="hljs-string">&quot;Debug: i==5, a = &quot;</span> &lt;&lt; a &lt;&lt; endl; <span class="hljs-comment">//调试</span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span> <span class="hljs-comment">// _DEBUG</span></span><br>cout &lt;&lt; <span class="hljs-string">&quot;a = &quot;</span> &lt;&lt; a &lt;&lt; endl;<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
+<h5 id="4）逐步调试和监视"><a href="#4）逐步调试和监视" class="headerlink" title="4）逐步调试和监视"></a>4）逐步调试和监视</h5><p>设置断点，运行程序，最下方监视窗口添加监视变量，逐步调试观察变量变化</p>
+<p><img src="/.%5CC++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%5Cimage-20240702195622555.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="1-3-虚拟机下载配置"><a href="#1-3-虚拟机下载配置" class="headerlink" title="1.3 虚拟机下载配置"></a>1.3 虚拟机下载配置</h3><p>ubuntu下载</p>
+<p>清华镜像：<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/ubuntu-releases/22.04.4/">https://mirrors.tuna.tsinghua.edu.cn/ubuntu-releases/22.04.4/</a></p>
+<p>ubuntu配置</p>
+<p>语言修改：Settings – Tegion &amp; language – Chinese &#x2F; English</p>
+<p>权限修改：在<code>/etc/sudoers</code>系统文件中找到”root ALL&#x3D;(ALL) ALL”，在后面添加”username ALL&#x3D;(ALL) ALL”</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs linux">su root			#切换为超级管理员，提示输入密码Password:<br>vi /etc/sudoers	#为自己的用户添加权限<br>exit			#退出超级管理员，用户可以进行sudo操作了<br></code></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p><img src="/.%5CC++%E5%B9%B6%E5%8F%91%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%5Cimage-20240702212421573.png" srcset="/img/loading.gif" lazyload></p>
+<p>常用插件：vim，ssh，xshell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs linux">sudo install vim<br>sudo install ssh<br>sudo install xshell<br></code></pre></td></tr></table></figure>
+
+<p>ssh远程链接Xshell进行办公：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_64655190/article/details/130569010">https://blog.csdn.net/m0_64655190/article/details/130569010</a></p>
 
                 
               </div>
@@ -304,8 +329,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hello World</div>
-      <div>http://yoursite.com/2024/05/15/hello-world/</div>
+      <div>C++并发网络通信服务器</div>
+      <div>http://yoursite.com/2024/07/02/C++并发网络通信服务器/</div>
     </div>
     <div class="license-meta">
       
@@ -317,7 +342,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年5月15日</div>
+          <div>2024年7月2日</div>
         </div>
       
       
@@ -349,15 +374,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/05/16/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" title="博客搭建">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">博客搭建</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2024/06/23/%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB%E8%AE%B0%E5%BD%95/" title="零散问题汇总">
+                        <span class="hidden-mobile">零散问题汇总</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

@@ -16,15 +16,15 @@
   <meta name="author" content="Qinzhi2022">
   <meta name="keywords" content="">
   
-    <meta name="description" content="应用层协议  如果网络模型是B&#x2F;S（Brower&#x2F;Server，浏览器&#x2F;服务器）结构，就必须用http协议  HTTP请求：客户端给服务器发送数据，主要使用的有GET，POST两种请求HTTP响应：服务器给客户端恢复数据HTTP协议封装好数据之后是一个数据块，得到若干行数据，使用换行符：\r\n，通过\r\n可以判断该行结束 学习参考：b站视频：https:&#x2F;&#x2F;www">
+    <meta name="description" content="应用层协议  如果网络模型是B&#x2F;S（Brower&#x2F;Server，浏览器&#x2F;服务器）结构，就需要用http协议">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HTTP 协议">
 <meta property="og:url" content="http://yoursite.com/2024/05/26/HTTP/index.html">
 <meta property="og:site_name" content="Moonswisdom">
-<meta property="og:description" content="应用层协议  如果网络模型是B&#x2F;S（Brower&#x2F;Server，浏览器&#x2F;服务器）结构，就必须用http协议  HTTP请求：客户端给服务器发送数据，主要使用的有GET，POST两种请求HTTP响应：服务器给客户端恢复数据HTTP协议封装好数据之后是一个数据块，得到若干行数据，使用换行符：\r\n，通过\r\n可以判断该行结束 学习参考：b站视频：https:&#x2F;&#x2F;www">
+<meta property="og:description" content="应用层协议  如果网络模型是B&#x2F;S（Brower&#x2F;Server，浏览器&#x2F;服务器）结构，就需要用http协议">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-05-26T14:24:50.257Z">
-<meta property="article:modified_time" content="2024-05-26T14:28:16.111Z">
+<meta property="article:modified_time" content="2024-07-02T13:32:13.265Z">
 <meta property="article:author" content="Qinzhi2022">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -274,8 +274,10 @@
                 
                 <p>应用层协议</p>
 <ul>
-<li>如果网络模型是B&#x2F;S（Brower&#x2F;Server，浏览器&#x2F;服务器）结构，就必须用http协议</li>
+<li>如果网络模型是B&#x2F;S（Brower&#x2F;Server，浏览器&#x2F;服务器）结构，就需要用http协议</li>
 </ul>
+<span id="more"></span>
+
 <p><strong>HTTP请求</strong>：客户端给服务器发送数据，主要使用的有GET，POST两种请求<br><strong>HTTP响应</strong>：服务器给客户端恢复数据<br>HTTP协议封装好数据之后是一个数据块，得到若干行数据，使用换行符：\r\n，通过\r\n可以判断该行结束</p>
 <p><em>学习参考：b站视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1XB4y1B7P9?p=9&vd_source=735fee8a67fec0b5a5f3625ab2fdb28b">https://www.bilibili.com/video/BV1XB4y1B7P9?p=9&amp;vd_source=735fee8a67fec0b5a5f3625ab2fdb28b</a>     作者：爱编程的大丙</em></p>
 <h3 id="1-1-HTTP请求"><a href="#1-1-HTTP请求" class="headerlink" title="1.1 HTTP请求"></a>1.1 HTTP请求</h3><ul>
@@ -307,7 +309,7 @@
 <figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-comment">// 状态行</span><br>HTTP/<span class="hljs-number">1.1</span> <span class="hljs-number">200</span> Ok<br><br><span class="hljs-comment">// 相应头</span><br><span class="hljs-built_in">Server</span>: micro_httpd<br>Date: Fri, <span class="hljs-number">18</span> Jul <span class="hljs-number">2014</span> <span class="hljs-number">14</span>:<span class="hljs-number">34</span>:<span class="hljs-number">25</span> GMT<br>Content-Type: text/plain; charset=iso<span class="hljs-number">-8859</span><span class="hljs-number">-1</span>  (**必选项**)<br><span class="hljs-comment">// 数据格式，text/plain纯文本，text/html网页 </span><br><span class="hljs-comment">// charset编码格式，iso-8859-1为纯英文，utf-8支持中文</span><br>Content-Length: <span class="hljs-number">32</span> 		<span class="hljs-comment">//数据长度</span><br>Location: https:<span class="hljs-comment">//www.baidu.com</span><br>Content-Language: zh-CN<br>Last-Modified: Fri, <span class="hljs-number">18</span> Jul <span class="hljs-number">2014</span> <span class="hljs-number">20</span>:<span class="hljs-number">36</span>:<span class="hljs-number">36</span> GMT<br>Connection: close<br><br><span class="hljs-comment">// 空行</span><br><br><span class="hljs-comment">// 响应内容</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-type">int</span> <span class="hljs-built_in">main</span>(<span class="hljs-type">void</span>)&#123;<br>	<span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;hello world！&quot;</span>);<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>状态行部分的状态码分类和常见状态码：</p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">状态码<br><span class="hljs-number">1</span>、<span class="hljs-number">1</span>xx: 指示信息<span class="hljs-comment">--表示请求已接收，继续处理</span><br><span class="hljs-number">2</span>、<span class="hljs-number">2</span>xx: 成功<span class="hljs-comment">--表示请求已成功接收、理解、接受</span><br><span class="hljs-number">3</span>、<span class="hljs-number">3</span>xx: 重定向<span class="hljs-comment">--要完成请求必须进行更进一步的操作（网络地址重新访问，例如http访问百度，会重定向为https）</span><br><span class="hljs-number">4</span>、<span class="hljs-number">4</span>xx: 客户端错误<span class="hljs-comment">--请求有语法错误或请求无法实现</span><br><span class="hljs-number">5</span>、<span class="hljs-number">5</span>xx: 服务器端错误<span class="hljs-comment">--服务器未能实现合法的请求</span><br><br>常见状态码：<br><span class="hljs-number">200</span> OK			客户端请求成功<br><span class="hljs-number">400</span> Bad Request	客户端请求有语法错误<br><span class="hljs-number">401</span> Unauthorized 请求未经授权<br><span class="hljs-number">403</span> Forbidden	服务器收到请求，但是拒绝提供服务<br><span class="hljs-number">404</span> <span class="hljs-keyword">Not</span> <span class="hljs-built_in">Found</span>	清华求资源不存在，e.g. 输入了错误的url<br><span class="hljs-number">500</span> <span class="hljs-type">Internal</span> <span class="hljs-keyword">Server</span> Error 服务器发生不可预期的错误<br><span class="hljs-number">503</span> <span class="hljs-keyword">Server</span> Unavailable 服务器当前不可用，一段时间后可能恢复<br></code></pre></td></tr></table></figure>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">状态码<br><span class="hljs-number">1</span>、<span class="hljs-number">1</span>xx: 指示信息<span class="hljs-comment">--表示请求已接收，继续处理</span><br><span class="hljs-number">2</span>、<span class="hljs-number">2</span>xx: 成功<span class="hljs-comment">--表示请求已成功接收、理解、接受</span><br><span class="hljs-number">3</span>、<span class="hljs-number">3</span>xx: 重定向<span class="hljs-comment">--要完成请求必须进行更进一步的操作（网络地址重新访问，例如http访问百度，会重定向为https）</span><br><span class="hljs-number">4</span>、<span class="hljs-number">4</span>xx: 客户端错误<span class="hljs-comment">--请求有语法错误或请求无法实现</span><br><span class="hljs-number">5</span>、<span class="hljs-number">5</span>xx: 服务器端错误<span class="hljs-comment">--服务器未能实现合法的请求</span><br><br>常见状态码：<br><span class="hljs-number">200</span> OK			客户端请求成功<br><span class="hljs-number">400</span> Bad Request	客户端请求有语法错误<br><span class="hljs-number">401</span> Unauthorized 请求未经授权<br><span class="hljs-number">403</span> Forbidden	服务器收到请求，但是拒绝提供服务<br><span class="hljs-number">404</span> <span class="hljs-keyword">Not</span> <span class="hljs-built_in">Found</span>	请求资源不存在，e.g. 输入了错误的url<br><span class="hljs-number">500</span> <span class="hljs-type">Internal</span> <span class="hljs-keyword">Server</span> Error 服务器发生不可预期的错误<br><span class="hljs-number">503</span> <span class="hljs-keyword">Server</span> Unavailable 服务器当前不可用，一段时间后可能恢复<br></code></pre></td></tr></table></figure>
 
 
 
@@ -417,8 +419,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/05/17/MySQL/" title="MySQL">
-                        <span class="hidden-mobile">MySQL</span>
+                      <a href="/2024/05/17/MySQL/" title="MySQL学习">
+                        <span class="hidden-mobile">MySQL学习</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
