@@ -24,7 +24,7 @@
 <meta property="og:description" content="基础的MySQL结构和语法">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-05-17T14:25:39.706Z">
-<meta property="article:modified_time" content="2024-07-11T04:12:05.085Z">
+<meta property="article:modified_time" content="2024-07-16T05:31:13.926Z">
 <meta property="article:author" content="Qinzhi2022">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          809 字
+          993 字
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          7 分钟
+          9 分钟
         
       </span>
     
@@ -275,7 +275,7 @@
                 <p>基础的MySQL结构和语法</p>
 <span id="more"></span>
 
-<h4 id="常用数据类型"><a href="#常用数据类型" class="headerlink" title="常用数据类型"></a>常用数据类型</h4><p>文本</p>
+<h3 id="常用数据类型"><a href="#常用数据类型" class="headerlink" title="常用数据类型"></a>常用数据类型</h3><p>文本</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">varchar(n)	#字符串，长度为n<br></code></pre></td></tr></table></figure>
 
 <p>数字</p>
@@ -284,7 +284,7 @@
 <p>时间&#x2F;日期</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">date		#日期，year-mouth-day，可以通过year(date)获取年，月，日<br>time		#时间，hour-minute-second，可以通过hour(time)获取时，分，秒<br>timestamp	#年，月，日，时，分，秒<br></code></pre></td></tr></table></figure>
 
-<h4 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h4><p>表名：<code>user_profile</code></p>
+<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><p>表名：<code>user_profile</code></p>
 <table>
 <thead>
 <tr>
@@ -378,7 +378,8 @@
 <p><code>group by</code> 字段	#分组</p>
 <p><code>order by</code> 字段	#排序，desc降序，asc升序</p>
 <p><code>limit</code> n		#限制条数为n，可结合order by得到最大&#x2F;最小的前n条数据</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select device_id, gender, gpa from user_profile<br>group by university<br>order by gpa limit 1;<br></code></pre></td></tr></table></figure>
+<p><code>offset</code> m		#设置起始索引位置，索引从0开始，结合limit选择任意位置任意长度数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select device_id, gender, gpa from user_profile<br>group by university<br>order by gpa limit 1	#取第一小的数据<br>#order by gpa limt 1 offset 1  #取第二小的数据<br></code></pre></td></tr></table></figure>
 
 <p><code>where</code> 条件	#针对原表数据，可结合<code>in</code>, <code>not in</code>, <code>and</code>, <code>or</code>来进行筛选</p>
 <p><code>having</code>条件	#针对非原表数据，例如组合重命名得到的数据</p>
@@ -492,6 +493,19 @@
 <p><code>like</code>，<code>%</code>，<code>_</code> 		#搜索指定格式，通配符：%表示0-n个字符，_表示一个字符</p>
 <p><code>ifnull</code>(变量，0)	#如果变量为null，则设置为0</p>
 <p>……</p>
+<h3 id="窗口函数"><a href="#窗口函数" class="headerlink" title="窗口函数"></a>窗口函数</h3><p>1、<code>ESNSE_RANK()</code>	#对数据按<code>PARTTION</code>分类，然后按<code>ORDER</code>排序，相同排名后连续: 1 1 2 3 4</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">DENSE_RANK() OVER (PARTITION BY column1, column2, ... ORDER BY column3, column 4, ...)<br><br>e.g. #分别统计各部门内员工的薪水排名，相同薪水同排名<br>select salary, (DENSE_RANK() OVER (PARTITION BY department ORDER BY salary)) as rank<br>from Employee<br></code></pre></td></tr></table></figure>
+
+<p>2、<code>RANK()</code>	#语法和<code>ESNSE_RANK()</code>相同， 区别是相同排名后不连续: 1 1 3 4 5</p>
+<h3 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h3><p><code>CREATE FUNCTION</code> 创造函数</p>
+<p><code>RETURNS</code> 返回值</p>
+<p><code>BEGIN</code> 和 <code>END</code> 中间为函数体</p>
+<p><code>DECLARE</code> 变量名 变量类型		#声明变量</p>
+<p><code>SET</code> 变量 &#x3D; 结果	#变量赋值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mysql">#取职工表Employee中第N高的Salary<br>CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT<br>BEGIN<br>declare M INT;<br>    set M = N-1;<br>    RETURN (<br>       select distinct(salary) from Employee order by salary desc limit 1 offset M<br>    );<br>END<br></code></pre></td></tr></table></figure>
+
+
+
 
                 
               </div>
