@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/CMake%E5%AD%A6%E4%B9%A0/image-20240619210330403.png">
 <meta property="article:published_time" content="2024-06-06T11:59:05.343Z">
-<meta property="article:modified_time" content="2024-07-30T06:16:51.651Z">
+<meta property="article:modified_time" content="2024-08-04T09:08:04.736Z">
 <meta property="article:author" content="Qinzhi2022">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://yoursite.com/CMake%E5%AD%A6%E4%B9%A0/image-20240619210330403.png">
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          3k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          18 分钟
+          25 分钟
         
       </span>
     
@@ -419,6 +419,54 @@
 <p><code>test1/CMakeList.txt</code></p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(test1)<br><span class="hljs-keyword">aux_source_directory</span>(./ SRC)<br><span class="hljs-keyword">include_directories</span>(<span class="hljs-variable">$&#123;HEADPATH&#125;</span>)<br><span class="hljs-keyword">link_directories</span>(<span class="hljs-variable">$&#123;LIBPATH&#125;</span>)<br><span class="hljs-keyword">link_libraries</span>(<span class="hljs-variable">$&#123;CALCLIB&#125;</span>)<br><span class="hljs-keyword">set</span>(EXECUTABLE_OUTPUT_PATH <span class="hljs-variable">$&#123;EXECPATH&#125;</span>)<br><span class="hljs-keyword">add_executable</span>(<span class="hljs-variable">$&#123;APPNAME1&#125;</span> <span class="hljs-variable">$&#123;SRC&#125;</span>)<br></code></pre></td></tr></table></figure>
 
+
+
+<h3 id="10-实用的编译设置"><a href="#10-实用的编译设置" class="headerlink" title="10 实用的编译设置"></a>10 实用的编译设置</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><span class="hljs-keyword">project</span>(Moon)<br><br><span class="hljs-comment"># 打印makefile编译信息</span><br><span class="hljs-keyword">set</span>(CMAKE_VERBOSE_MAKEFILE <span class="hljs-keyword">ON</span>)<br><span class="hljs-comment"># 程序编译设置</span><br><span class="hljs-keyword">set</span>(CMAKE_CXX_FLAGS <span class="hljs-string">&quot;$ENV&#123;CXXFLAGS&#125; -rdynamic -O0 -g -std=c++11 -Wall -Wno-deprecated -Werror -Wno-unused-function&quot;</span>)<br><br><span class="hljs-comment"># 将HOME设置为CMakeLists同级目录</span><br><span class="hljs-keyword">set</span>(HOME <span class="hljs-variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>)<br><span class="hljs-comment"># 包含下的include目录，一般用于存放.h文件</span><br><span class="hljs-keyword">include_directories</span>(<span class="hljs-variable">$&#123;HOME&#125;</span>/<span class="hljs-keyword">include</span>)<br><span class="hljs-comment"># 将需要编译的资源cpp文件赋给LIB_SRC变量列表</span><br><span class="hljs-keyword">set</span>(LIB_SRC <span class="hljs-variable">$&#123;HOME&#125;</span>/src/*.cpp)<br><br><span class="hljs-comment"># 创建动态库库</span><br><span class="hljs-keyword">add_library</span>(moon SHARED <span class="hljs-variable">$&#123;LIB_SRC&#125;</span>)<br><span class="hljs-comment"># 创建静态库</span><br><span class="hljs-comment"># add_library(moon STATIC $&#123;LIB_SRC&#125;)</span><br><br><span class="hljs-comment"># 创建可执行程序</span><br><span class="hljs-keyword">add_executable</span>(<span class="hljs-keyword">test</span> <span class="hljs-variable">$&#123;HOME&#125;</span>/tests/<span class="hljs-keyword">test</span>.cpp)<br><span class="hljs-comment"># 添加依赖项</span><br><span class="hljs-keyword">add_dependencies</span>(<span class="hljs-keyword">test</span> moon)<br><span class="hljs-comment"># 链接动态库</span><br><span class="hljs-keyword">target_link_libraries</span>(<span class="hljs-keyword">test</span> moon)<br><br><span class="hljs-comment"># 设置链接库输出路径</span><br><span class="hljs-keyword">set</span>(LIBRARY_OUTPUT_PATH <span class="hljs-variable">$&#123;HOME&#125;</span>/lib)<br><span class="hljs-comment"># 设置可执行程序输出路径</span><br><span class="hljs-keyword">set</span>(EXECUTABLE_OUTPUT_PATH <span class="hljs-variable">$&#123;HOME&#125;</span>/bin)<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li><code>set(CMAKE_CXX_FLAGS ...)</code><ul>
+<li><code>set</code> 是CMake中用于设置变量的命令。</li>
+<li><code>CMAKE_CXX_FLAGS</code> 是一个CMake变量，用于存储传递给C++编译器的标志（flags）。在CMake配置和构建过程中，这些标志会被应用到所有C++源文件上。</li>
+</ul>
+</li>
+<li><code>&quot;$ENV&#123;CXXFLAGS&#125; ...&quot;</code><ul>
+<li>这部分代码从环境变量中读取<code>CXXFLAGS</code>的值，并将其作为CMake变量<code>CMAKE_CXX_FLAGS</code>值的一部分。如果环境变量<code>CXXFLAGS</code>被设置，那么其值将被添加到<code>CMAKE_CXX_FLAGS</code>中。</li>
+<li>注意，这里使用了双引号<code>&quot;</code>来确保整个表达式被CMake作为单一字符串处理。这是必要的，因为环境变量的值（如果有的话）将与其他标志一起被解析和添加到<code>CMAKE_CXX_FLAGS</code>中。</li>
+</ul>
+</li>
+<li><code>-rdynamic</code><ul>
+<li>这是一个GCC（和兼容GCC的编译器）特有的标志，用于在生成的可执行文件中包含所有符号的完整调试信息，以便动态链接器可以在运行时解析这些符号。这对于使用动态链接库（DLLs或.so文件）的程序特别有用，因为它允许运行时链接器找到并解析程序中引用的所有符号。</li>
+</ul>
+</li>
+<li><code>-O0</code><ul>
+<li>这个标志告诉编译器优化级别为0，即不进行任何优化。这通常用于调试目的，因为它可以确保生成的代码与源代码更接近，更容易调试。</li>
+</ul>
+</li>
+<li><code>-g</code><ul>
+<li>这个标志请求编译器在生成的可执行文件中包含调试信息。这对于使用调试器（如GDB）调试程序非常有用。</li>
+</ul>
+</li>
+<li><code>-std=c++11</code><ul>
+<li>这个标志指定编译器使用C++11标准（也称为C++0x）来编译代码。C++11是C++语言的一个重要更新，引入了许多新特性，如自动类型推导（<code>auto</code>关键字）、lambda表达式、范围<code>for</code>循环等。</li>
+</ul>
+</li>
+<li><code>-Wall</code><ul>
+<li>这个标志请求编译器显示所有警告信息。这有助于开发者在编译阶段发现潜在的代码问题。</li>
+</ul>
+</li>
+<li><code>-Wno-deprecated</code><ul>
+<li>尽管<code>-Wall</code>请求显示所有警告，但这个标志用于禁用关于已弃用特性的警告。这可能在项目中使用了一些即将被移除但尚未被移除的旧功能时很有用。</li>
+</ul>
+</li>
+<li><code>-Werror</code><ul>
+<li>这个标志将警告视为错误。如果编译器发出任何警告，构建过程将失败。这有助于确保代码质量，因为开发者必须解决所有潜在的代码问题才能成功构建程序。</li>
+</ul>
+</li>
+<li><code>-Wno-unused-function</code><ul>
+<li>尽管<code>-Werror</code>将警告视为错误，但这个标志用于禁用关于未使用函数的警告。这可能在大型项目中很有用，其中可能包含一些为将来的扩展或测试而编写的当前未使用的函数。</li>
+</ul>
+</li>
+</ol>
 
                 
               </div>
