@@ -28,8 +28,9 @@
 <meta property="og:image" content="http://yoursite.com/RectorServer/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86.png">
 <meta property="og:image" content="http://yoursite.com/RectorServer/event_loop.png">
 <meta property="og:image" content="http://yoursite.com/RectorServer/connect_client.png">
+<meta property="og:image" content="http://yoursite.com/RectorServer/msg_router.png">
 <meta property="article:published_time" content="2024-08-02T04:41:08.869Z">
-<meta property="article:modified_time" content="2024-08-06T18:05:21.910Z">
+<meta property="article:modified_time" content="2024-08-07T15:18:58.621Z">
 <meta property="article:author" content="Qinzhi2022">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://yoursite.com/RectorServer/Lars%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1.png">
@@ -236,7 +237,7 @@
         
         
         
-          10 分钟
+          11 分钟
         
       </span>
     
@@ -328,10 +329,8 @@
 <p>建立客户端发送消息，基本实现和服务器端的tcp_conn相似</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-type">void</span> <span class="hljs-title">msg_callback</span><span class="hljs-params">(event_loop* loop, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* data, <span class="hljs-type">int</span> msglen, <span class="hljs-type">int</span> msgid, tcp_client* client, <span class="hljs-type">void</span>* user_data)</span></span>;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">tcp_client</span><br>&#123;<br><span class="hljs-keyword">public</span>:  <br>	<span class="hljs-comment">// 方法和tcp_conn相似</span><br>    <span class="hljs-comment">// 多一个设置自定义函数</span><br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setcallback</span><span class="hljs-params">(msg_callback* msg_cb)</span></span>;<br><span class="hljs-keyword">private</span>:<br>	<span class="hljs-comment">// 属性和tcp_conn相同</span><br>    <span class="hljs-comment">// 多一个自定义回调函数</span><br>   	msg_callback* msg_call;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
-
-
-
-
+<h2 id="1-5-任务路由系统"><a href="#1-5-任务路由系统" class="headerlink" title="1.5 任务路由系统"></a>1.5 任务路由系统</h2><p>统一管理服务器和客户端的消息任务，建立消息类别和回调函数的对应路由表，统一简化任务处理</p>
+<p><img src="/./RectorServer/msg_router.png" srcset="/img/loading.gif" lazyload></p>
 
                 
               </div>
