@@ -16,12 +16,12 @@
   <meta name="author" content="Qinzhi2022">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1、Reactor高并发服务器框架。2、DNS域名解析实现IP映射。3、用户反馈。4、负载均衡。5、性能测试。 项目地址：https:&#x2F;&#x2F;gitee.com&#x2F;zhi_Q&#x2F;LB_Server    1 Reactor高并发服务器框架集成网络通信和I&#x2F;O多路复用的高性能服务器框架 C++ TCP&#x2F;UDP 长连接服务器框架 包含：内存管理，消息封装，粘包处理，多线程，消息队列，配置文">
+    <meta name="description" content="1、Reactor高并发服务器框架。2、DNS域名解析。3、用户反馈。4、负载均衡。5、性能测试。 项目地址：https:&#x2F;&#x2F;gitee.com&#x2F;zhi_Q&#x2F;LB_Server    1 Reactor高并发服务器框架集成网络通信和I&#x2F;O多路复用的高性能服务器框架 C++ TCP&#x2F;UDP 长连接服务器框架 包含：内存管理，消息封装，粘包处理，多线程，消息队列，配置文件，异步任务">
 <meta property="og:type" content="article">
 <meta property="og:title" content="负载均衡远程服务调用系统Lars(持续更新中)">
 <meta property="og:url" content="http://yoursite.com/2024/08/02/RectorServer/index.html">
 <meta property="og:site_name" content="Moonswisdom">
-<meta property="og:description" content="1、Reactor高并发服务器框架。2、DNS域名解析实现IP映射。3、用户反馈。4、负载均衡。5、性能测试。 项目地址：https:&#x2F;&#x2F;gitee.com&#x2F;zhi_Q&#x2F;LB_Server    1 Reactor高并发服务器框架集成网络通信和I&#x2F;O多路复用的高性能服务器框架 C++ TCP&#x2F;UDP 长连接服务器框架 包含：内存管理，消息封装，粘包处理，多线程，消息队列，配置文">
+<meta property="og:description" content="1、Reactor高并发服务器框架。2、DNS域名解析。3、用户反馈。4、负载均衡。5、性能测试。 项目地址：https:&#x2F;&#x2F;gitee.com&#x2F;zhi_Q&#x2F;LB_Server    1 Reactor高并发服务器框架集成网络通信和I&#x2F;O多路复用的高性能服务器框架 C++ TCP&#x2F;UDP 长连接服务器框架 包含：内存管理，消息封装，粘包处理，多线程，消息队列，配置文件，异步任务">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://yoursite.com/RectorServer/Lars%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1.png">
 <meta property="og:image" content="http://yoursite.com/RectorServer/tcp_server.png">
@@ -30,9 +30,9 @@
 <meta property="og:image" content="http://yoursite.com/RectorServer/connect_client.png">
 <meta property="og:image" content="http://yoursite.com/RectorServer/msg_router.png">
 <meta property="og:image" content="http://yoursite.com/RectorServer/thread_pool.png">
-<meta property="og:image" content="http://yoursite.com/RectorServer/config%E5%92%8CUDP.png">
+<meta property="og:image" content="http://yoursite.com/RectorServer/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.png">
 <meta property="article:published_time" content="2024-08-02T04:41:08.869Z">
-<meta property="article:modified_time" content="2024-08-08T17:04:42.118Z">
+<meta property="article:modified_time" content="2024-08-09T12:40:46.333Z">
 <meta property="article:author" content="Qinzhi2022">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://yoursite.com/RectorServer/Lars%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1.png">
@@ -228,7 +228,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          2.1k 字
         
       </span>
     
@@ -239,7 +239,7 @@
         
         
         
-          15 分钟
+          18 分钟
         
       </span>
     
@@ -281,7 +281,7 @@
             
               <div class="markdown-body">
                 
-                <p>1、Reactor高并发服务器框架。2、DNS域名解析实现IP映射。3、用户反馈。4、负载均衡。5、性能测试。</p>
+                <p>1、Reactor高并发服务器框架。2、DNS域名解析。3、用户反馈。4、负载均衡。5、性能测试。</p>
 <p>项目地址：<a target="_blank" rel="noopener" href="https://gitee.com/zhi_Q/LB_Server">https://gitee.com/zhi_Q/LB_Server</a></p>
 <!-- more  -->
 
@@ -340,16 +340,31 @@
 <p>消息队列使用模板类，可兼容各种消息类型</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">class</span> <span class="hljs-title class_">T</span>&gt;<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">thread_queue</span>&#123; <span class="hljs-comment">// 需要加线程锁以及错误判断, 此处只是过程简要代码</span><br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">thread_queue</span>()&#123; <br>    	_evfd = <span class="hljs-built_in">eventfd</span>(<span class="hljs-number">0</span>, EFD_NONBLOCK); <span class="hljs-comment">// 创建可被epoll识别的文件描述符，用于提醒线程有任务</span><br>    &#125;<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">add_task</span><span class="hljs-params">(<span class="hljs-type">const</span> T task)</span></span>&#123; <br>        _queue.<span class="hljs-built_in">push</span>(task); <span class="hljs-comment">// 将task加入任务队列</span><br>        <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span> idle_num = <span class="hljs-number">1</span>; <span class="hljs-comment">// 用long long占字长避免消息少了触发缓存</span><br>        <span class="hljs-built_in">write</span>(_evfd, &amp;idle_num, <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span>)); <span class="hljs-comment">// 提醒loop有任务</span><br>    &#125;<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">get_task</span><span class="hljs-params">(std::queue&lt;T&gt;&amp; msgs)</span></span>&#123;<br>        <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span> idle_num;<br>        <span class="hljs-built_in">read</span>(_evfd, &amp;idle_num, <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">long</span>)); <span class="hljs-comment">// 把_evfd内容读空，避免阻塞</span><br>        std::<span class="hljs-built_in">swap</span>(_que, msgs); <span class="hljs-comment">// 将全部消息传给空的msgs并清空_que，使用swap比copy快</span><br>    &#125;<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">set_loop</span><span class="hljs-params">(event_loop* loop)</span></span>&#123; <span class="hljs-comment">// 绑定反应堆</span><br>        _loop = loop;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">set_callback</span><span class="hljs-params">(io_callback *cb, <span class="hljs-type">void</span>* args = <span class="hljs-literal">nullptr</span>)</span></span>&#123;<br>        <span class="hljs-comment">// 向对应的反应堆写加任务</span><br>    	_loop-&gt;<span class="hljs-built_in">add_io_event</span>(_evfd, cb, EPOLLIN, args);<br>    &#125;<br><span class="hljs-keyword">private</span>:<br>    <span class="hljs-type">int</span> _evfd;<br>    std::queue&lt;T&gt; _que;<br>	event_loop* _loop;<br>&#125;;<br></code></pre></td></tr></table></figure>
 
-<h2 id="1-7-配置文件和UDP支持"><a href="#1-7-配置文件和UDP支持" class="headerlink" title="1.7 配置文件和UDP支持"></a>1.7 配置文件和UDP支持</h2><p><img src="/./RectorServer/config%E5%92%8CUDP.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="1-7-配置文件"><a href="#1-7-配置文件" class="headerlink" title="1.7 配置文件"></a>1.7 配置文件</h2><p><img src="/./RectorServer/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.png" srcset="/img/loading.gif" lazyload></p>
 <p>自定义配置文件，使用key–value键值对进行存储，然后编写函数对文件内容进行解析调用，如下ini文件</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c++">#配置名<br>[reactor]<br><span class="hljs-meta">#ip地址</span><br>ip = <span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>#端口号<br>port = <span class="hljs-number">19913</span><br>#每个服务器的最大连接数<br>maxConn = <span class="hljs-number">1000</span>	#<br>#每个线程池中线程个数<br>threadNum = <span class="hljs-number">4</span>	#<br></code></pre></td></tr></table></figure>
 
 <p>UDP是无连接的报文传输方式，速度较快，在特定场景可采用</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// 创建套接字</span><br><span class="hljs-type">int</span> sockfd = <span class="hljs-built_in">socket</span>(AF_INET, SOCK_GRDAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_UDP);<br><span class="hljs-comment">// 消息收发</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">sockaddr_in</span> addr;<br>addr.sin_family = AF_INET;<br>addr.sin_port = <span class="hljs-built_in">htons</span>(port);<br><span class="hljs-built_in">inet_pton</span>(AF_INET, ip, &amp;addr.sin_addr);<br><span class="hljs-type">socklen_t</span> addrlen = <span class="hljs-built_in">sizeof</span>(addr);<br><span class="hljs-comment">// 接收消息</span><br><span class="hljs-type">int</span> ret = <span class="hljs-built_in">recvfrom</span>(sockfd, _recvbuf, msglen, <span class="hljs-number">0</span>, (<span class="hljs-keyword">struct</span> sockaddr*)&amp;addr, &amp;addrlen);<br><span class="hljs-comment">// 发送消息</span><br><span class="hljs-type">int</span> ret = <span class="hljs-built_in">sendto</span>(sockfd, _sendbuf, msglen, <span class="hljs-number">0</span>, (<span class="hljs-keyword">struct</span> sockaddr*)&amp;addr, addrlen);<br></code></pre></td></tr></table></figure>
 
+<p>protocol buff传输协议安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#下载protobuf</span><br>wget https://github.com/protocolbuffers/protobuf/releases/download/v21.11/protobuf-all-21.11.zip<br><span class="hljs-comment">#解压</span><br>unzip protobuf-all-21.11.zip<br><span class="hljs-comment">#安装依赖库</span><br>sudo apt-get install autoconf automake libtool curl make g++ unzip libffi-dev -y<br><span class="hljs-comment">#进入目录</span><br><span class="hljs-built_in">cd</span> protobuf-21.11/<br><span class="hljs-comment">#自动生成configure配置文件</span><br>./autogen.sh<br><span class="hljs-comment">#配置环境</span><br>./configure<br><span class="hljs-comment">#编译源代码(速度较慢)</span><br>make<br><span class="hljs-comment">#安装</span><br>sudo make install<br><span class="hljs-comment">#刷新共享库</span><br>sudo config<br><span class="hljs-comment">#测试</span><br>protoc -h<br></code></pre></td></tr></table></figure>
+
+<p>创建protobuf支持文件的脚本build.sh</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br>protoc --cpp_out=. ./*proto<br></code></pre></td></tr></table></figure>
+
+<p>proto文件编写</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs protobuf">syntax=<span class="hljs-string">&quot;proto3&quot;</span>;<br><span class="hljs-keyword">package</span> qps_test;<br><span class="hljs-keyword">message </span><span class="hljs-title class_">EchoMessage</span><br>&#123;<br>	<span class="hljs-type">string</span> content = <span class="hljs-number">2</span>;<br>	int id = <span class="hljs-number">1</span>;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>修改脚本权限并执行脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">chmod</span> +x build.sh<br>./build.sh<br></code></pre></td></tr></table></figure>
+
+<p>会生成protobuf 支持文件.cc 和 .h，在cpp文件中导入.h即可</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;echoMessage.pb.h&quot;</span> <span class="hljs-comment">// echoMessage是proto的文件名</span></span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">test</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* data, <span class="hljs-type">int</span> len)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">// 解析请求</span><br>    qps_test::EchoMessage request, response;<br>    request.<span class="hljs-built_in">ParseFromArray</span>(data, len); <span class="hljs-comment">// 将长度为len二进制字符串data解析到content</span><br>    <span class="hljs-comment">// std::cout &lt;&lt; &quot;data = &quot; &lt;&lt; request.content() &lt;&lt; &quot;, len = &quot; &lt;&lt; request.content().size() &lt;&lt; std::endl;</span><br>    <span class="hljs-comment">// 设置新回复</span><br>    response.<span class="hljs-built_in">set_id</span>(request.<span class="hljs-built_in">id</span>());<br>    response.<span class="hljs-built_in">set_content</span>(<span class="hljs-string">&quot;我已接收到信息&quot;</span>);<br>    std::string responseString;<br>    response.<span class="hljs-built_in">SerializeToString</span>(&amp;responseString) <span class="hljs-comment">// 将response的内容解析为string到变量中</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 
+<h1 id="2-DNS域名解析"><a href="#2-DNS域名解析" class="headerlink" title="2 DNS域名解析"></a>2 DNS域名解析</h1>
                 
               </div>
             
