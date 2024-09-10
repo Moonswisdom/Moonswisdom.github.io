@@ -24,7 +24,7 @@
 <meta property="og:description" content="基础的MySQL结构和语法">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-05-17T14:25:39.706Z">
-<meta property="article:modified_time" content="2024-07-30T06:16:45.721Z">
+<meta property="article:modified_time" content="2024-08-30T05:05:53.415Z">
 <meta property="article:author" content="Qinzhi2022">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -219,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          993 字
+          3.3k 字
         
       </span>
     
@@ -230,7 +230,7 @@
         
         
         
-          9 分钟
+          28 分钟
         
       </span>
     
@@ -275,7 +275,7 @@
                 <p>基础的MySQL结构和语法</p>
 <span id="more"></span>
 
-<h3 id="常用数据类型"><a href="#常用数据类型" class="headerlink" title="常用数据类型"></a>常用数据类型</h3><p>文本</p>
+<h1 id="1-MySQL"><a href="#1-MySQL" class="headerlink" title="1 MySQL"></a>1 MySQL</h1><h2 id="1-1-基本类型和语法"><a href="#1-1-基本类型和语法" class="headerlink" title="1.1 基本类型和语法"></a>1.1 基本类型和语法</h2><h3 id="1-1-1-常用数据类型"><a href="#1-1-1-常用数据类型" class="headerlink" title="1.1.1 常用数据类型"></a>1.1.1 常用数据类型</h3><p>文本</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">varchar(n)	#字符串，长度为n<br></code></pre></td></tr></table></figure>
 
 <p>数字</p>
@@ -284,7 +284,7 @@
 <p>时间&#x2F;日期</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">date		#日期，year-mouth-day，可以通过year(date)获取年，月，日<br>time		#时间，hour-minute-second，可以通过hour(time)获取时，分，秒<br>timestamp	#年，月，日，时，分，秒<br></code></pre></td></tr></table></figure>
 
-<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><p>表名：<code>user_profile</code></p>
+<h3 id="1-1-2-基本语法"><a href="#1-1-2-基本语法" class="headerlink" title="1.1.2 基本语法"></a>1.1.2 基本语法</h3><p>表名：<code>user_profile</code></p>
 <table>
 <thead>
 <tr>
@@ -388,18 +388,18 @@
 
 
 <p><strong>连接函数：</strong></p>
-<p><code>inner join</code> 表名 <code>on</code> 条件</p>
 <p>#内连接 两个表中都满足条件的数据进行连接</p>
-<p><code>left join</code> 表名 <code>on</code> 条件</p>
+<p><code>inner join</code> 表名 <code>on</code> 条件</p>
 <p>#左连接 左表为基准，找出右表&#x3D;左表的数据，右表没有的数据则为空</p>
-<p><code>right join</code> 表名 <code>on</code> 条件</p>
+<p><code>left join</code> 表名 <code>on</code> 条件</p>
 <p>#右连接 右表为基准，找出左表&#x3D;右表的数据，左表没有的数据则为空</p>
-<p><code>full join</code> 表名 <code>on</code> 条件</p>
+<p><code>right join</code> 表名 <code>on</code> 条件</p>
 <p>#全连接，结果等于<code>left join</code> 和 <code>right join</code>的结果合成的表</p>
-<p><code>self join</code> 表名 <code>on</code> 条件</p>
+<p><code>full join</code> 表名 <code>on</code> 条件</p>
 <p>#自连接，用于不清楚自身表部分数据时的筛选</p>
-<p><code>union</code> </p>
+<p><code>self join</code> 表名 <code>on</code> 条件</p>
 <p>#联合查询，要求数据表列数一致，查询结果会自动去除重复行，<code>union all</code>不去重</p>
+<p><code>union</code> </p>
 <p>表名：<code>question_detail</code></p>
 <table>
 <thead>
@@ -493,11 +493,11 @@
 <p><code>like</code>，<code>%</code>，<code>_</code> 		#搜索指定格式，通配符：%表示0-n个字符，_表示一个字符</p>
 <p><code>ifnull</code>(变量，0)	#如果变量为null，则设置为0</p>
 <p>……</p>
-<h3 id="窗口函数"><a href="#窗口函数" class="headerlink" title="窗口函数"></a>窗口函数</h3><p>1、<code>ESNSE_RANK()</code>	#对数据按<code>PARTTION</code>分类，然后按<code>ORDER</code>排序，相同排名后连续: 1 1 2 3 4</p>
+<h3 id="1-1-3-窗口函数"><a href="#1-1-3-窗口函数" class="headerlink" title="1.1.3 窗口函数"></a>1.1.3 窗口函数</h3><p>1、<code>ESNSE_RANK()</code>	#对数据按<code>PARTTION</code>分类，然后按<code>ORDER</code>排序，相同排名后连续: 1 1 2 3 4</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">DENSE_RANK() OVER (PARTITION BY column1, column2, ... ORDER BY column3, column 4, ...)<br><br>e.g. #分别统计各部门内员工的薪水排名，相同薪水同排名<br>select salary, (DENSE_RANK() OVER (PARTITION BY department ORDER BY salary)) as rank<br>from Employee<br></code></pre></td></tr></table></figure>
 
 <p>2、<code>RANK()</code>	#语法和<code>ESNSE_RANK()</code>相同， 区别是相同排名后不连续: 1 1 3 4 5</p>
-<h3 id="自定义函数"><a href="#自定义函数" class="headerlink" title="自定义函数"></a>自定义函数</h3><p><code>CREATE FUNCTION</code> 创造函数</p>
+<h3 id="1-1-4-自定义函数"><a href="#1-1-4-自定义函数" class="headerlink" title="1.1.4 自定义函数"></a>1.1.4 自定义函数</h3><p><code>CREATE FUNCTION</code> 创造函数</p>
 <p><code>RETURNS</code> 返回值</p>
 <p><code>BEGIN</code> 和 <code>END</code> 中间为函数体</p>
 <p><code>DECLARE</code> 变量名 变量类型		#声明变量</p>
@@ -506,6 +506,157 @@
 
 
 
+<h2 id="1-2-MySQL特性"><a href="#1-2-MySQL特性" class="headerlink" title="1.2 MySQL特性"></a>1.2 MySQL特性</h2><h4 id="1-2-1-事务特性"><a href="#1-2-1-事务特性" class="headerlink" title="1.2.1 事务特性"></a>1.2.1 事务特性</h4><p>ACID：原子性，一致性，隔离性，持久性</p>
+<p>隔离级别：读未提交，读已提交，可重复读(mysql默认)，可串行话</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">start transaction / begin;	# 开启事务<br>commit;						# 提交事务，这时其它客户端才可以看到修改的内容<br>rallback; 					# 回滚到begin开始点<br>savepoint name;				# 创建一个名为name的回滚点，保存当前状态<br>rallback to name;			# 回滚到对应的保存点<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-2-2-索引"><a href="#1-2-2-索引" class="headerlink" title="1.2.2 索引"></a>1.2.2 索引</h4><p>索引结构：B+树，树节点只保存索引，不保存值，在叶节点保存所有值，并链表连接，每种索引都是有序的。</p>
+<p>索引虽然提高查询速率，但索引要占用空间，所有不是越多越好。</p>
+<p>聚集索引：数据和索引放在一起。非聚集索引：数据和索引分开存放</p>
+<p>主键索引：primary key</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">create table name(id int primary key, age int);			# 创建时<br>create table name(id int, age int, primary key(id)); 	# 创建时<br>alter table name add primay key(id);					# 创建后修改<br></code></pre></td></tr></table></figure>
+
+<p>唯一索引：unique index</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">create table name(id int, age int, unique index(age));	# 创建时<br>create unique index age_idx on name(age);				# 创建后修改<br>alter table name add unique index age_idx(age);			# 创建后修改<br></code></pre></td></tr></table></figure>
+
+<p>普通索引：index</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">create index age_idx on name(age);<br></code></pre></td></tr></table></figure>
+
+<p>组合索引：index，组合索引时先按第一个排序，然后依次。如果跳过前面的索引查后面，此时索引无效。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">create index id_age_idx on name(id, age);<br></code></pre></td></tr></table></figure>
+
+<p>删除索引</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">alter table name drop index age_idx;<br>drop index age_idx on name;<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-2-3-数据库引擎"><a href="#1-2-3-数据库引擎" class="headerlink" title="1.2.3 数据库引擎"></a>1.2.3 数据库引擎</h4><table>
+<thead>
+<tr>
+<th align="center">功能</th>
+<th align="center">MyISAM</th>
+<th align="center">InnoDB</th>
+<th align="center">MEMORY</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">存储限制</td>
+<td align="center">256TB</td>
+<td align="center">64TB</td>
+<td align="center">RAM</td>
+</tr>
+<tr>
+<td align="center">支持事务(并发特性)</td>
+<td align="center">No</td>
+<td align="center">Yes</td>
+<td align="center">No</td>
+</tr>
+<tr>
+<td align="center">支持全文索引</td>
+<td align="center">Yes</td>
+<td align="center">No</td>
+<td align="center">No</td>
+</tr>
+<tr>
+<td align="center">支持树索引</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+<td align="center">No</td>
+</tr>
+<tr>
+<td align="center">支持hash索引</td>
+<td align="center">No</td>
+<td align="center">No</td>
+<td align="center">Yes</td>
+</tr>
+<tr>
+<td align="center">支持数据缓存</td>
+<td align="center">No</td>
+<td align="center">Yes</td>
+<td align="center">No</td>
+</tr>
+<tr>
+<td align="center">支持外键</td>
+<td align="center">No</td>
+<td align="center">Yes</td>
+<td align="center">No</td>
+</tr>
+</tbody></table>
+<h5 id="1-2-3-1-MyISAM-5-5以前默认"><a href="#1-2-3-1-MyISAM-5-5以前默认" class="headerlink" title="1.2.3.1 MyISAM(5.5以前默认)"></a>1.2.3.1 MyISAM(5.5以前默认)</h5><p>mysql默认，不支持事务和隔离，不提供行级锁，默认保存表行数，查询读取较快快。</p>
+<p>非聚集索引，数据和索引不保存在一起，索引树上叶节点保存索引和数据的地址，再通过地址获取数据信息。</p>
+<h5 id="1-2-3-2-InnoDB-5-5以后默认"><a href="#1-2-3-2-InnoDB-5-5以后默认" class="headerlink" title="1.2.3.2 InnoDB(5.5以后默认)"></a>1.2.3.2 InnoDB(5.5以后默认)</h5><p>支持事务特性ACID和故障恢复，支持四种隔离级别，提供行级锁对并发写有优势。</p>
+<p>聚集索引：数据和索引保存到一起，主键索引树叶节点即包含索引和对应的数据信息，不需要再通过地址查找。</p>
+<p>索引覆盖：对于非主键索引，没有保存全部列信息，如果找到了对应列则叫索引覆盖。</p>
+<p>回表：对于非主键索引如果找不到对应列，通过查到的主键回到主键索引树查找对应列叫回表。</p>
+<h5 id="1-2-3-3-Memory"><a href="#1-2-3-3-Memory" class="headerlink" title="1.2.3.3 Memory"></a>1.2.3.3 Memory</h5><p>特点：数据放在内存，支持hash索引，速度最快，但存储少，不支持Blob(大二进制)和Text(大文本)字段。Memory表在退出系统后因为返还内存因此会清空数据内容，但表结构会保存，使用truncate的删除。</p>
+<p>存储：一般用于存储临时表，临时表只在单个会话存在，退出后删除，支持正常增删改查。</p>
+<p>删除的区别：</p>
+<p>drop:	直接删除表结构和数据</p>
+<p>delete:	只能一条一条删除数据，不删除表格</p>
+<p>truncate:	先删除表结构和数据一次性删除数据，再重建表结构</p>
+<h4 id="1-2-4-锁"><a href="#1-2-4-锁" class="headerlink" title="1.2.4 锁"></a>1.2.4 锁</h4><p>表级锁：MyISAM，InnoDB</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">lock table name read;	# 读锁共享<br>lock table name write;	# 写锁互斥，其它会话不可读写<br></code></pre></td></tr></table></figure>
+
+<p>行级锁：InnoDB</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mysql">select * from name where id = 1 lock in shared mode;	# 行级共享读锁，其它行可任意读写<br>select * from name where id = 1 for update;				# 行级写锁互斥，不可对该行访问修改<br>select * from name where id &gt; 1 and id &lt; 6 for update;	# 间隙锁，范围内的新增插入也不可以<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-2-5-慢查询日志"><a href="#1-2-5-慢查询日志" class="headerlink" title="1.2.5 慢查询日志"></a>1.2.5 慢查询日志</h4><p>通过设置慢查询日志，可以保存查询时间慢于设定值的语句用于调整</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">show variables like &#x27;%long_query_time&#x27;; # 慢查询时间<br>show variables like &#x27;%slow_query_log&#x27;;	# 默认关闭， slow_query_log_file存储文件地址<br><br>set global long_query_time=0.1;		# 设置时间<br>set global slow_query_log=ON;		# 启动慢查询日志<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-2-6-执行计划"><a href="#1-2-6-执行计划" class="headerlink" title="1.2.6 执行计划"></a>1.2.6 执行计划</h4><p>explain + sql语句：可以模拟查看MySQL如何处理SQL语句的顺序，方式等。</p>
+<h4 id="1-2-7-索引失效"><a href="#1-2-7-索引失效" class="headerlink" title="1.2.7 索引失效"></a>1.2.7 索引失效</h4><p>索引计算和函数：explain select * from name where id + 1 &#x3D; 4;</p>
+<p>索引慎用不等号：explain select * from name where c1 &lt;&gt; ‘wuhan’;</p>
+<h1 id="2-Redis"><a href="#2-Redis" class="headerlink" title="2 Redis"></a>2 Redis</h1><p>启动服务器：redis-server</p>
+<p>启动客户端：redis-cli</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">select</span> 1		<span class="hljs-comment"># 选择1号仓库，默认为0号仓库</span><br>flushall		<span class="hljs-comment"># 清空</span><br>move name1 2	<span class="hljs-comment"># 移动数据1去第2个数据库</span><br>Ttl key			<span class="hljs-comment"># 查看key的剩余有效时间, -1表示永不过期, -2表示已过期</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-1-基本数据类型"><a href="#2-1-基本数据类型" class="headerlink" title="2.1 基本数据类型"></a>2.1 基本数据类型</h2><p>redis所有数据的数据类型均为string</p>
+<p>键值对：key-value</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">set</span> name1 data1					<span class="hljs-comment"># 设置key=name1, 内容=data1</span><br>get name						<span class="hljs-comment"># 获取key=name的内容</span><br>getrange name 0 -1				<span class="hljs-comment"># 查看指定值的</span><br>mset name1 data1 name2 data2 	<span class="hljs-comment"># 设置多个键值对</span><br>mget name1 name2 				<span class="hljs-comment"># 获得多个键值对</span><br>del name1						<span class="hljs-comment"># 删除name1内容</span><br>append user1 data12				<span class="hljs-comment"># 为data1追加data12内容</span><br>keys *							<span class="hljs-comment"># 查看所有键</span><br>exists user1					<span class="hljs-comment"># 查看是否存在键user1</span><br><span class="hljs-built_in">type</span> user1						<span class="hljs-comment"># 查看user1对应的数据类型</span><br>setex user3 10 data3			<span class="hljs-comment"># 创建键user3和它的过期时间为10s</span><br>expire user1 10					<span class="hljs-comment"># 为已经有的键设置过期时间</span><br></code></pre></td></tr></table></figure>
+
+<p>哈希：hash</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">hset huser1 name1 data1		<span class="hljs-comment"># 创建hash数据huser1第一个键值对name1 data1</span><br>hget huser1 name1			<span class="hljs-comment"># 查看数据huser1的关键字name1的值</span><br>hmget huser1 name1 name2	<span class="hljs-comment"># 查看数据huser1的多个键值对</span><br>hgetall huser1				<span class="hljs-comment"># 查看huser1下所有键值对</span><br>hdel huser1 name2			<span class="hljs-comment"># 删除huser1下的name2键值对</span><br>del huser1					<span class="hljs-comment"># 删除huser1</span><br></code></pre></td></tr></table></figure>
+
+<p>列表：list</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">lpush luser1 aa bb 			<span class="hljs-comment"># 从luser1左端添加两个数据，没有则创建list数据</span><br>rpush luser1 cc <span class="hljs-built_in">dd</span>			<span class="hljs-comment"># 从luser1右端添加两个数据</span><br>lpop luser1					<span class="hljs-comment"># 从luser1左端删除数据</span><br>rpop luser1					<span class="hljs-comment"># 从luser1右端删除数据</span><br>linsert luser1 before cc 10	<span class="hljs-comment"># 从cc前面插入数据10</span><br>linsert luser1 after cc 20	<span class="hljs-comment"># 从cc后面插入数据20</span><br>lrange luser1 0 -1			<span class="hljs-comment"># 获取指定范围所有数据，0为第一个，-1为最后一个</span><br>lset luser1 0 ee			<span class="hljs-comment"># 修改第0个数据为ee</span><br>lrem luser1 -1 cc			<span class="hljs-comment"># 从右端开始删除1个cc，-表示从右端开始，数字为个数</span><br>lrem luser1 2 bb			<span class="hljs-comment"># 从左端开始删除2个bb</span><br>ltrim luser1 1 4			<span class="hljs-comment"># 保留第2-5个数，其它删除</span><br></code></pre></td></tr></table></figure>
+
+<p>集合：set</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">sadd suser1 aa bb			<span class="hljs-comment"># 从suser1左端添加两个数据，没有则创建</span><br>radd suser1 cc <span class="hljs-built_in">dd</span>			<span class="hljs-comment"># 从suser2右端添加两个数据</span><br>smembers suser1				<span class="hljs-comment"># 查询全部数据</span><br>srem aa						<span class="hljs-comment"># 删除值</span><br></code></pre></td></tr></table></figure>
+
+<p>有序集合：zset</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">zadd zuser1 1 aa 3 <span class="hljs-built_in">dd</span> 6 cc 2 ee	<span class="hljs-comment"># 添加四个数据，数字为得分，字符为值，按得分排序</span><br>zrange zuser1 0 -1				<span class="hljs-comment"># 查看全部数据</span><br>zrange zuser1 0 -1 withscores	<span class="hljs-comment"># 查看全部数据和得分</span><br>zrangebyscore zuser1 1 6		<span class="hljs-comment"># 查看得分在1~6之间的数据</span><br>zscore zuser1 cc				<span class="hljs-comment"># 查看cc的得分</span><br>zrem zuser1 aa					<span class="hljs-comment"># 删除aa</span><br>zremrangebyscore zuser1 0 10	<span class="hljs-comment"># 删除得分在0~10之间的数据</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-2-Redis特性"><a href="#2-2-Redis特性" class="headerlink" title="2.2 Redis特性"></a>2.2 Redis特性</h2><h3 id="2-2-1-配置文件"><a href="#2-2-1-配置文件" class="headerlink" title="2.2.1 配置文件"></a>2.2.1 配置文件</h3><p>路径：&#x2F;etc&#x2F;redis&#x2F;redis.conf</p>
+<p>启动redis-server方法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">redis-server /etc/redis/redis.conf	<span class="hljs-comment"># 无图像界面,守护进程后台运行</span><br>redis-server 						<span class="hljs-comment"># 有图形界面</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-2-持久化"><a href="#2-2-2-持久化" class="headerlink" title="2.2.2 持久化"></a>2.2.2 持久化</h3><p><strong>RDB</strong>持久化：定时保存到磁盘</p>
+<p>&#x2F;var&#x2F;lib&#x2F;redis&#x2F;dump.rdb文件，保存redis内存快照，在重启redis时会从dump.rdb文件中重新加载恢复数据库。</p>
+<p>快照触发方式：一定数量的写操作，save操作，flushall操作，shutdown操作。</p>
+<p>优点：在大数据集比AOF快。</p>
+<p>缺点：完整性和一致性不高，可能在最后一次备份宕机。每次备份需要创建一个子进程去将数据写入到临时文件，再用临时文件替换备份文件，此时需要双倍空间过渡。</p>
+<p><strong>AOF</strong>持久化：将每次写命令保存到磁盘</p>
+<p>在重启redis时会依次执行所有的写命令</p>
+<h3 id="2-2-3-事务"><a href="#2-2-3-事务" class="headerlink" title="2.2.3 事务"></a>2.2.3 事务</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mysql">MULTI		# 开启事务，之后的指令依次入队。语法均正确时，事务不具备原子性，语法有误时，事务具备原子性<br>EXEC		# 结束事务<br>DISCARD		# 取消事务，放弃事务模块的所有命令<br>WATCH key	# 监视某变量启动事务时，如果其它地方对改值进行修改，则事务失效<br>UNWATCH		# 取消监视，在exec时执行取消<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-4-锁"><a href="#2-2-4-锁" class="headerlink" title="2.2.4 锁"></a>2.2.4 锁</h3><p>悲观锁：每次拿数据都认为别人会修改，都上锁；效率低，但保证正确性</p>
+<p>乐观锁：每次拿数据都认为别人不会修改，不上锁；为了解决正确性问题，使用版本号和CAS机制</p>
+<h3 id="2-2-4-主从复制"><a href="#2-2-4-主从复制" class="headerlink" title="2.2.4 主从复制"></a>2.2.4 主从复制</h3><p>将主机的配置文件进行拷贝并修改端口，分离创建多个主机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">info replication	# 查看当前机器的主机和从机情况<br></code></pre></td></tr></table></figure>
+
+<p>在想修改为从机的地方执行命令指定所属的主机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">SLAVER host port	# 将当前机器指定为host地址port端口主机的从机<br></code></pre></td></tr></table></figure>
+
+<p>主机发生更改，从机将拷贝主机的信息并更新自身（从机只保存主机备份信息，不能进行写操作）</p>
+<p>主机宕机时，从机保持原状态持续到主机恢复。</p>
+<h3 id="2-2-6-哨兵机制"><a href="#2-2-6-哨兵机制" class="headerlink" title="2.2.6 哨兵机制"></a>2.2.6 哨兵机制</h3><p>使用一个哨兵来监视主机，主机挂掉之后选举新的从机来作为主机，并修改其余从机所属的主机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mysql">sentinel monitor master6379 127.0.0.1 6379 1 # 监视配置文件<br></code></pre></td></tr></table></figure>
+
+<p>启动哨兵的配置文件</p>
+<p>sudo reids-server &#x2F;etc&#x2F;redis&#x2F;sentinel.conf</p>
+<p>将主机挂掉（shutdown）</p>
+<p>等待哨兵运作，需要一点时间判断连接超时，然后转移主机信息</p>
+<h3 id="2-2-7-三大问题"><a href="#2-2-7-三大问题" class="headerlink" title="2.2.7 三大问题"></a>2.2.7 三大问题</h3><p>缓存雪崩：同一时间大部分数据失效，需要从数据库读取 —— 设置错开数据的失效时间</p>
+<p>缓存击穿：某一时刻大并发请求一个热点数据，但此时它刚好过期导致访问数据库 —— 延长热点数据持续时间</p>
+<p>缓存穿透：频繁访问数据库中完全不存在的数据，每次都会向数据库访问 —— 保存空值（但浪费空间），设置白名单，从业务外部拦截黑名单</p>
 
                 
               </div>
@@ -568,7 +719,7 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/05/26/HTTP/" title="HTTP 学习笔记">
+                      <a href="/2024/05/26/HTTP%E5%AD%A6%E4%B9%A0/" title="HTTP 学习笔记">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">HTTP 学习笔记</span>
                         <span class="visible-mobile">上一篇</span>

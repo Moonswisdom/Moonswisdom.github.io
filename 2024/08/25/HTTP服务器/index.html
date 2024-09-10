@@ -1,0 +1,957 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Qinzhi2022">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="基于Nginx，workflow，rpc实现高并发HTTP服务器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP服务器">
+<meta property="og:url" content="http://yoursite.com/2024/08/25/HTTP%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:site_name" content="Moonswisdom">
+<meta property="og:description" content="基于Nginx，workflow，rpc实现高并发HTTP服务器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2024/08/25/HTTP%E6%9C%8D%E5%8A%A1%E5%99%A8/Users/12143/Moonlights/source_posts/HTTP%E6%9C%8D%E5%8A%A1%E5%99%A8/%E6%97%A5%E5%BF%97%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="http://yoursite.com/2024/08/25/HTTP%E6%9C%8D%E5%8A%A1%E5%99%A8/Users/12143/Moonlights/source_posts/HTTP%E6%9C%8D%E5%8A%A1%E5%99%A8/workflow%E6%80%BB%E7%BB%93.png">
+<meta property="og:image" content="http://yoursite.com/HTTP%E6%9C%8D%E5%8A%A1%E5%99%A8/%E5%BE%AE%E6%9C%8D%E5%8A%A1.png">
+<meta property="article:published_time" content="2024-08-25T05:19:13.510Z">
+<meta property="article:modified_time" content="2024-09-10T05:07:14.025Z">
+<meta property="article:author" content="Qinzhi2022">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://yoursite.com/2024/08/25/HTTP%E6%9C%8D%E5%8A%A1%E5%99%A8/Users/12143/Moonlights/source_posts/HTTP%E6%9C%8D%E5%8A%A1%E5%99%A8/%E6%97%A5%E5%BF%97%E6%A0%BC%E5%BC%8F.png">
+  
+  
+  
+  <title>HTTP服务器 - Moonswisdom</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":true,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Moonswisdom</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bloginit.jpeg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="HTTP服务器"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-25 13:19" pubdate>
+          2024年8月25日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          60 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">HTTP服务器</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>基于Nginx，workflow，rpc实现高并发HTTP服务器</p>
+<span id="more"></span>
+
+<h1 id="1-Nginx-–-多进程"><a href="#1-Nginx-–-多进程" class="headerlink" title="1 Nginx – 多进程"></a>1 Nginx – 多进程</h1><h2 id="1-1-Nginx安装"><a href="#1-1-Nginx安装" class="headerlink" title="1.1 Nginx安装"></a>1.1 Nginx安装</h2><p>安装依赖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt install libz-dev		<span class="hljs-comment"># 处理压缩</span><br>sudo apt install libpcre3-dev	<span class="hljs-comment"># 处理正则表达式</span><br>sudo apt install libssl-dev		<span class="hljs-comment"># 处理ssL连接</span><br></code></pre></td></tr></table></figure>
+
+<p>官网下载：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://nginx.org/download/nginx-1.26.2.tar.gz<br></code></pre></td></tr></table></figure>
+
+<p>解压：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar -zxvf nginx-1.26.2.tar.gz<br><span class="hljs-built_in">cd</span> nginx-1.26.2/	<span class="hljs-comment"># 进入目录</span><br></code></pre></td></tr></table></figure>
+
+<p>生成makefile</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">./configure --prefix=path	<span class="hljs-comment"># 指定make执行后生成的文件目录</span><br>./configure --prefix=/usr/local/nginx/		<span class="hljs-comment"># 生成到该目录中，后续nginx启动需要root权限</span><br>make				<span class="hljs-comment"># 执行./configure生成的makefile</span><br>sudo make install 	<span class="hljs-comment"># 将文件装到指定文件</span><br></code></pre></td></tr></table></figure>
+
+<p>进入指定目录并运行nginx</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">su root					<span class="hljs-comment"># 切换root权限</span><br><span class="hljs-built_in">cd</span> /usr/local/nginx		<span class="hljs-comment"># 进入nginx文件夹</span><br>./sbin/nginx			<span class="hljs-comment"># 启动nginx，默认nginx.conf配置</span><br>./sbin/nginx -c conf/0_nginx.conf <span class="hljs-comment"># 指定以0_nginx.conf配置启动</span><br>./sbin/nginx -s quit -c conf/0_nginx.conf	<span class="hljs-comment"># quit优雅关闭(等待所有访问结束)，stop强制关闭</span><br>./sbin/nginx -s reload -c conf/0_nginx.conf <span class="hljs-comment"># 重新加载0_nginx.conf配置，在修改配置后使用</span><br>netstat -tulp			<span class="hljs-comment"># 查看端口, nginx默认绑定80端口，启动后即可在网页通过 ip:80 访问</span><br></code></pre></td></tr></table></figure>
+
+<p>查看配置文件nginx.conf，其中的指令可在<a target="_blank" rel="noopener" href="https://nginx.org/en/docs/dirindex.html%E6%9F%A5%E7%9C%8B">https://nginx.org/en/docs/dirindex.html查看</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 整体最外层就是main作用域，events&#123;&#125;为events作用域</span><br>worker_processes  1;        <span class="hljs-comment"># 工作进程数</span><br>events &#123;    <br>	worker_connections  1024;   <span class="hljs-comment"># 同时连接的数量</span><br>&#125;<br>http &#123; <br>	include       mime.types;   <span class="hljs-comment"># 引入文件</span><br>	default_type  application/octet-stream; <span class="hljs-comment">#浏览器遇到不明确的文件类型就采用下载</span><br>	<br>	sendfile        on;<br>	keepalive_timeout  65;<br>	server &#123;	<span class="hljs-comment"># 开启虚拟服务端，可以用多个虚拟服务端监听同一个端口</span><br>		listen       80;<br>		server_name  localhost;<br>		location / &#123;	<span class="hljs-comment"># 用来匹配uri的path，默认前缀匹配</span><br>			root   html;	<span class="hljs-comment"># 该根目录就是安装nginx时得到的nginx/html/文件目录</span><br>			index  index.html index.htm;<br>		&#125;<br>		error_page   500 502 503 504  /50x.html;<br>		location = /50x.html &#123;<br>			root   html;<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>后续添加html文件就直接放在nginx&#x2F;html文件目录中，网页访问静态资源为ip:80&#x2F;name.html</p>
+<h2 id="1-2-Nginx-四大模块！！！"><a href="#1-2-Nginx-四大模块！！！" class="headerlink" title="1.2 Nginx 四大模块！！！"></a>1.2 Nginx 四大模块！！！</h2><h3 id="1-2-1-http模块"><a href="#1-2-1-http模块" class="headerlink" title="1.2.1 http模块"></a>1.2.1 http模块</h3><h4 id="1-2-1-1-日志"><a href="#1-2-1-1-日志" class="headerlink" title="1.2.1.1 日志"></a>1.2.1.1 日志</h4><p>设置日志格式和保存路径，access_log 为成功的日志，error_log为失败的日志</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">error_log logs/error.log; <span class="hljs-comment"># 默认error级别，也可在最后添加指定级别</span><br><span class="hljs-comment">#error_log logs/error.log notice; # 指定错误级别为notice</span><br><br>http&#123;	// http作用域内部<br>	<span class="hljs-comment"># ============= 设置日志的输出格式和地址 ===================</span><br>	log_format main <span class="hljs-string">&#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span> <br>					<span class="hljs-string">&#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span> <br>                    <span class="hljs-string">&#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;</span>; <br><br>	access_log logs/access01.<span class="hljs-built_in">log</span> main;<br>	<span class="hljs-comment"># =====================================================</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/08/25/HTTP%E6%9C%8D%E5%8A%A1%E5%99%A8/Users\12143\Moonlights\source_posts\HTTP服务器\日志格式.png" srcset="/img/loading.gif" lazyload></p>
+<p>该日志和上面格式一一对应，$remote_user因为没有所以打印 -</p>
+<h4 id="1-2-1-2-压缩"><a href="#1-2-1-2-压缩" class="headerlink" title="1.2.1.2 压缩"></a>1.2.1.2 压缩</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">http&#123;<br>	gzip on;			<span class="hljs-comment"># 开启压缩</span><br>	gzip_min_length 1;	<span class="hljs-comment"># 设置压缩的最小文件大小，单位为字节</span><br>	gzip_comp_level 2;	<span class="hljs-comment"># 压缩级别，级别越高，压缩越久，文件越小</span><br>	gzip types text/css text/plain;	<span class="hljs-comment"># 指定只压缩css和plain文件</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-2-2-server模块-–-虚拟服务端"><a href="#1-2-2-server模块-–-虚拟服务端" class="headerlink" title="1.2.2 server模块 – 虚拟服务端"></a>1.2.2 server模块 – 虚拟服务端</h3><p>在http的server模块中可添加多个服务器，绑定相同端口，也可绑定不同端口，但是同一个进程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash">http &#123; <br>	server &#123;	<span class="hljs-comment"># 开启虚拟服务端，可以用多个虚拟服务端监听同一个端口</span><br>		listen	80;<br>		server_name  localhost1;<br>		location / &#123;	<span class="hljs-comment"># 用来匹配uri的path，默认前缀匹配</span><br>			<span class="hljs-built_in">return</span> 200 <span class="hljs-string">&quot;hello\n&quot;</span>;<br>		&#125;<br>	&#125;<br>	server&#123;<br>		listen	80;<br>        server_name localhost2;<br>        location / &#123;<br>        	<span class="hljs-built_in">return</span> 200 <span class="hljs-string">&quot;world\n&quot;</span>;<br>        &#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>调试：抓数据包到cap文件&#x3D;&#x3D;&gt;WinSCP将文件传输到windows&#x3D;&#x3D;&gt;使用wireshark查看cap文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">netstat -ntulp	<span class="hljs-comment"># 查看端口情况，n以数字显示地址和端口，t显示TCP，u显示UDP,l显示监听的端口，p显示连接的对应程序，a显示所有端口和连接，o显示计时器</span><br>tcpdump -i any port 80 -w /home/moonlight/dumpfile/http01.<span class="hljs-built_in">cap</span>	<span class="hljs-comment"># tcpdump抓包，-i any所有信息, -w 生成.cap文件</span><br></code></pre></td></tr></table></figure>
+
+<p>可以通过修改sudo &#x2F;etc&#x2F;hosts 来配置网址对应的客户名</p>
+<h3 id="1-2-3-location模块-–-根据uri匹配配置功能"><a href="#1-2-3-location模块-–-根据uri匹配配置功能" class="headerlink" title="1.2.3 location模块 – 根据uri匹配配置功能"></a>1.2.3 location模块 – 根据uri匹配配置功能</h3><p>location中匹配优先级：</p>
+<p>1、完全匹配项</p>
+<p>2、^~前缀匹配（如果是最长的前缀）</p>
+<p>3、按配置文件中出现的顺序，找到第一个正则匹配项</p>
+<p>4、前缀匹配（先缓存最长的）</p>
+<p>5、&#x2F; 万能匹配</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs bash">http &#123; <br>	server &#123;	<span class="hljs-comment"># 开启虚拟服务端，可以用多个虚拟服务端监听同一个端口</span><br>		listen	80;<br>		server_name  localhost1;<br>		location / &#123;	<span class="hljs-comment"># 用来匹配uri的path，默认前缀匹配</span><br>			<span class="hljs-built_in">return</span> 200 <span class="hljs-string">&quot;hello\n&quot;</span>;<br>		&#125;<br>		location /abc &#123;			<span class="hljs-comment"># 前缀匹配 /abcfsef 只有前面有abc就匹配</span><br>			<span class="hljs-built_in">return</span> 200 <span class="hljs-string">&quot;abc\n&quot;</span>;<br>		&#125;<br>		location = /acc &#123;		<span class="hljs-comment"># = 要求完全匹配</span><br>			<span class="hljs-built_in">return</span> 200 <span class="hljs-string">&quot;acc\n&quot;</span>;<br>		&#125;<br>		location ~ /(.*)<span class="hljs-built_in">test</span> &#123;	<span class="hljs-comment"># ~ 正则匹配 ,*匹配任意字符，即只要请求内容包含test即可匹配</span><br>			<span class="hljs-built_in">return</span> 200 <span class="hljs-string">&quot;test\n&quot;</span>;<br>		&#125;<br>		location ~* /(.*)star &#123;	<span class="hljs-comment"># ~* 正则匹配忽略大小写</span><br>			<span class="hljs-built_in">return</span> 200 <span class="hljs-string">&quot;star\n&quot;</span>;<br>		&#125;<br>		location ^~ /123 &#123;		<span class="hljs-comment"># ^否定，^~不进行正则匹配，还是前缀匹配</span><br>			<span class="hljs-built_in">return</span> 200 <span class="hljs-string">&quot;123\n&quot;</span>;<br>		&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用nginx搭建静态资源服务器，配置文件指定文件根目录：root显式拼接，alias隐式替换</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">location /i/ &#123;<br>	root <span class="hljs-built_in">test</span>/;		<span class="hljs-comment"># 匹配目录 /usr/local/nginx/test/i/xxx	=&gt; 将/i/拼接到test/，暴露内部结构</span><br>&#125;<br>location /i/ &#123;<br>	<span class="hljs-built_in">alias</span> <span class="hljs-built_in">test</span>/;	<span class="hljs-comment"># 匹配目录 /usr/loacl/nginx/test/xxx  =&gt; 将/i/替换为test/，隐藏内部结构</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>默认显示文件：index file</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">location /i/ &#123;<br>	<span class="hljs-built_in">alias</span> <span class="hljs-built_in">test</span>/;<br>	index index.html;	<span class="hljs-comment"># 当以/i/结尾没有指定文件时，默认转到index指定的文件</span><br>	autoindex on;		<span class="hljs-comment"># 如果没有对应的index文件，则自动生成当前目录的索引文件</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>变量使用</p>
+<pre><code class="hljs">http&#123;
+    server&#123;
+    	location ~ /([a-z]*)([0-9]*) &#123;	# 下面这个$1为匹配第一个括号的内容，$2为匹配第二个括号的内容
+            return 200 &quot;/$1--$2\n&quot;;
+        &#125;
+        location /test/ &#123;
+            return 200 &#39;$uri&#39;;	# 输出请求的uri
+        &#125;
+        location /test/ &#123;
+            return 200 &#39;arg test&#39;;	# 取出test关键字的值?test=value
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<h3 id="1-2-4-upstream模块-–-支持反向代理"><a href="#1-2-4-upstream模块-–-支持反向代理" class="headerlink" title="1.2.4 upstream模块 – 支持反向代理"></a>1.2.4 upstream模块 – 支持反向代理</h3><h4 id="1-2-4-1-反向代理的原因"><a href="#1-2-4-1-反向代理的原因" class="headerlink" title="1.2.4.1 反向代理的原因"></a>1.2.4.1 反向代理的原因</h4><p>前后端一致 &#x3D;&#x3D;&gt; 前后端分离(后端将html和javascript发给前端，前端再根据jsp请求) &#x3D;&#x3D;&gt; 高并发，中间代理层</p>
+<h4 id="1-2-4-2-部署反向代理"><a href="#1-2-4-2-部署反向代理" class="headerlink" title="1.2.4.2 部署反向代理"></a>1.2.4.2 部署反向代理</h4><p>同时启动两个nginx会产生冲突，后者的pid_file路径相同会覆盖。需要在配置文件中配置conf文件的pid文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">pid logs/1_bussiness.<span class="hljs-built_in">log</span>	<span class="hljs-comment"># 系统文件中，在main作用域</span><br>pid logs/2_proxy.<span class="hljs-built_in">log</span>		<span class="hljs-comment"># 代理文件中</span><br></code></pre></td></tr></table></figure>
+
+<p>设置反向代理</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">server&#123;<br>	listen 0.0.0.0:80;	<span class="hljs-comment"># 0.0.0.0 才是公网，可供外部访问</span><br>	server_name proxy;<br>	location / &#123;<br>		proxy_set_header Host <span class="hljs-variable">$host</span>; <span class="hljs-comment"># 添加显示给服务器发送消息的代理服务器ip</span><br>		proxy_set_header X-Real_IP <span class="hljs-variable">$remote_addr</span>; <span class="hljs-comment"># 添加显示真正的远端客户端ip</span><br>		proxy_set_header X-Forwarded-For <span class="hljs-variable">$proxy_add_x_forwarded_for</span>; <span class="hljs-comment"># 添加显示经过的代理ip</span><br>		proxy_pass http://localhost; <span class="hljs-comment"># 代理ip地址，所有访问80端口的&#x27;/‘都会替换为此地址</span><br>		<span class="hljs-comment"># 例如 192.168.200.128:80/index.html ==&gt; http://localhost/index.html</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-2-4-3-开启缓存"><a href="#1-2-4-3-开启缓存" class="headerlink" title="1.2.4.3 开启缓存"></a>1.2.4.3 开启缓存</h4><p>先在http作用域申请缓存</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">proxy_cache_path /tmp/43nginxCache levels=1.2 keys_zone=my_cache:10m max_size=10g inactive=60m use_temp_path=off;<br></code></pre></td></tr></table></figure>
+
+<p>然后location作用域中设置缓存</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">proxy_cache my_cache;<br>proxy_cache_key $host$uri$is_args<span class="hljs-variable">$args</span>;<br>proxy_cache_valid 200 304 302 1d;<br></code></pre></td></tr></table></figure>
+
+<p>在目标服务器挂掉，但缓存中保存有相应静态信息时，可正确响应</p>
+<h4 id="1-2-4-4-负载均衡"><a href="#1-2-4-4-负载均衡" class="headerlink" title="1.2.4.4 负载均衡"></a>1.2.4.4 负载均衡</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs bash">upstream backend&#123;<br>	server 127.0.0.1:1234 weight=1;	<span class="hljs-comment"># 添加权重</span><br>	server 127.0.0.1:1235 weight=2;<br>&#125;<br>server&#123;<br>	listen 1234;<br>	server_name test1.abc;<br>	location / &#123;<br>		<span class="hljs-built_in">return</span> 200 <span class="hljs-string">&quot;1234\n&quot;</span>;<br>	&#125;<br>&#125;<br>server&#123;<br>	listen 1235;<br>	server_name test2.abc;<br>	location / &#123;<br>		<span class="hljs-built_in">return</span> 200 <span class="hljs-string">&quot;1235\n&quot;</span>;<br>	&#125;<br>&#125;<br>server&#123;<br>	listen 80;<br>	server_name localhost;<br>	location / &#123;<br>		proxy_pass http://backend;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>默认负载方法：轮询</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">upstream backend&#123;<br>	server 127.0.0.1:1234;<br>	server 127.0.0.1:1235;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>根据服务器性能调整：加权轮询 &#x3D;&#x3D;&#x3D;&gt; 无法充分使用服务器的缓存</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">upstream backend&#123;<br>	server 127.0.0.1:1234 weight=1;<br>	server 127.0.0.1:1235 weight=2;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用服务端缓存：直接哈希策略 &#x3D;&#x3D;&#x3D;&gt; 当hash内存数量变化时，会导致投影出错</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">upstream backend&#123;<br>	ip <span class="hljs-built_in">hash</span>;<br>	server 127.0.0.1:1234;<br>	server 127.0.0.1:1235;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可避免内存变化的影响：一致性哈希</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">upstream backend&#123;<br>	<span class="hljs-built_in">hash</span> key consistent;	<span class="hljs-comment"># key表示分段的依据</span><br>	server 127.0.0.1:1234;<br>	server 127.0.0.1:1235;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="1-3-Nginx第三模块支持"><a href="#1-3-Nginx第三模块支持" class="headerlink" title="1.3 Nginx第三模块支持"></a>1.3 Nginx第三模块支持</h2><p>下载第三方模块nginx-xxx-moule文件并解压得到文件夹</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/arut/nginx-rtmp-module.git<br></code></pre></td></tr></table></figure>
+
+<p>在配置生成Nginx的makefile时添加模块信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./configure --add-dynamic-module=/home/moonlight/workplace/build/nginx-rtmp-module<br></code></pre></td></tr></table></figure>
+
+<p>此时将Nginx生成的程序全部移动到&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;，此时有module文件夹</p>
+<p>在配置文件中即可加入module，load_module作用域在main</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">load_module modules/ngx_http_echo_module.so		<span class="hljs-comment"># 查看module文件夹下的动态库</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="2-workflow框架"><a href="#2-workflow框架" class="headerlink" title="2 workflow框架"></a>2 workflow框架</h1><p>常见的框架和库</p>
+<p>TCP	reactor同步 –&gt; muduo事件驱动；proactor异步 –&gt; boost::asio准标准库；</p>
+<p>HTTP	libhv基于reactor实现同步；workflow异步框架；brpc协程框架；</p>
+<h2 id="2-1-安装workflow"><a href="#2-1-安装workflow" class="headerlink" title="2.1 安装workflow"></a>2.1 安装workflow</h2><p>下载workflow</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/sogou/workflow.git<br></code></pre></td></tr></table></figure>
+
+<p>安装依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt install -y cmake libssl-dev<br></code></pre></td></tr></table></figure>
+
+<p>安装配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> workflow<br>cmake .<br>make<br><span class="hljs-built_in">cd</span> tutorial<br>make<br><br>make install 	<span class="hljs-comment"># 安装到/usr/include/</span><br></code></pre></td></tr></table></figure>
+
+<p>workflow的优势，异步框架，容易添加任务，任务具有串联(先后)和并联(并发)两种形式</p>
+<h2 id="2-2-workflow任务"><a href="#2-2-workflow任务" class="headerlink" title="2.2 workflow任务"></a>2.2 workflow任务</h2><h3 id="2-2-1-普通任务WFHttpTask"><a href="#2-2-1-普通任务WFHttpTask" class="headerlink" title="2.2.1 普通任务WFHttpTask"></a>2.2.1 普通任务WFHttpTask</h3><h5 id="工厂模式创建任务"><a href="#工厂模式创建任务" class="headerlink" title="工厂模式创建任务"></a>工厂模式创建任务</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// http任务</span><br>WFHttpTask *httpTask = WFTaskFactory::<span class="hljs-built_in">create_http_task</span>(<span class="hljs-string">&quot;http://192.168.200.128:9913&quot;</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, callback);<br><br><span class="hljs-comment">// redis任务</span><br>WFRedisTask *redisTask = WFTaskFactory::<span class="hljs-built_in">create_redis_task</span>(<span class="hljs-string">&quot;redis://127.0.0.1:6379&quot;</span>, <span class="hljs-number">0</span>, callback);<br><br><span class="hljs-comment">// IO读写任务，调用LInux系统函数pread, pwrite(fd, buf, size, offset);</span><br>WFFileIOTask *IOTask = WFTaskFactory::<span class="hljs-built_in">create_pread_task</span>(fd, buf, size, offset, callback);<br>WFFileIOTask *IOTask = WFTaskFactory::<span class="hljs-built_in">create_pwrite_task</span>(fd, buf, size, offset,callback);<br><br><span class="hljs-comment">// mysql任务 mysql://username:passwd@ip:port</span><br>WFMySQLTask *mysqlTask = WFTaskFactory::<span class="hljs-built_in">create_mysql_task</span>( <span class="hljs-string">&quot;mysql://moonlight:wasd0104@127.0.0.1:3306&quot;</span>, <span class="hljs-number">0</span>, callback);<br><br><span class="hljs-comment">// 定时任务, 可用于做心跳任务，避免断开连接，单位是us。如果像持续则在回调函数序列中再添加相同任务</span><br>WFTimerTask *timerTask = WFTaskFactory::<span class="hljs-built_in">create_timer_task</span>(<span class="hljs-number">2</span>*<span class="hljs-number">1000000</span>, callback);<br></code></pre></td></tr></table></figure>
+
+<h5 id="设置任务属性"><a href="#设置任务属性" class="headerlink" title="设置任务属性"></a>设置任务属性</h5><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// 设置http请求</span><br>protocol::HttpRequest *req = httpTask-&gt;<span class="hljs-built_in">get_req</span>();<br>req-&gt;<span class="hljs-built_in">add_header_pair</span>(<span class="hljs-string">&quot;Accept&quot;</span>, <span class="hljs-string">&quot;*/*&quot;</span>);<br>req-&gt;<span class="hljs-built_in">add_header_pair</span>(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;myHttpTask&quot;</span>);<br>req-&gt;<span class="hljs-built_in">set_header_pair</span>(<span class="hljs-string">&quot;Connection&quot;</span>, <span class="hljs-string">&quot;close&quot;</span>);<br><br><span class="hljs-comment">// 设置redis请求</span><br>protocol::RedisRequest *req = redisTask-&gt;<span class="hljs-built_in">get_req</span>();<br>req-&gt;<span class="hljs-built_in">set_request</span>(<span class="hljs-string">&quot;SET&quot;</span>, &#123;<span class="hljs-string">&quot;43key&quot;</span>, <span class="hljs-string">&quot;200&quot;</span>&#125;);<br><br><span class="hljs-comment">// 设置IO请求，通常将fd和buf保存到series-&gt;context中</span><br><br><span class="hljs-comment">// 设置mysql请求</span><br>protocol::MySQLRequest *req = mysqlTask-&gt;<span class="hljs-built_in">get_req</span>();<br>req-&gt;<span class="hljs-built_in">set_query</span>(sql);<br><br><span class="hljs-comment">// 读取时间</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">timeval</span> tv;<br><span class="hljs-built_in">gettimeofday</span>(&amp;tv, <span class="hljs-literal">NULL</span>);	<span class="hljs-comment">// tv.tv_sec, tv.tv_usec;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="启动任务"><a href="#启动任务" class="headerlink" title="启动任务"></a>启动任务</h5><p>异步任务：基本工作 + 回调函数</p>
+<p>gethostbyname(域名)，返回IP和port</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">// 开启任务<br>httpTask-&gt;start();<br>redisTask-&gt;start();<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-2-序列任务SeriesWork"><a href="#2-2-2-序列任务SeriesWork" class="headerlink" title="2.2.2 序列任务SeriesWork"></a>2.2.2 序列任务SeriesWork</h3><p>有些任务必须分先后顺序执行，使用SeriesWork</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs C++">WFRedisTask *secondTask = WFTaskFactory::<span class="hljs-built_in">create_redis_task</span>(<span class="hljs-string">&quot;redis://127.0.0.1:6379&quot;</span>, <span class="hljs-number">0</span>, callback);<br>secondTask-&gt;<span class="hljs-built_in">get_req</span>()-&gt;<span class="hljs-built_in">set_request</span>(<span class="hljs-string">&quot;HGETALL&quot;</span>, &#123;<span class="hljs-string">&quot;huser1&quot;</span>&#125;);<br>SeriesWork *series = <span class="hljs-built_in">series_of</span>(redisTask);	<span class="hljs-comment">// 获取当前回调函数的序列</span><br>series-&gt;<span class="hljs-built_in">push_back</span>(secondTask);	<span class="hljs-comment">// 将secondTask加入到当前回调函数的序列的后面，依次执行</span><br></code></pre></td></tr></table></figure>
+
+<p>在序列任务中可以使用context实现共享数据</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c++">SeriesWork *series = <span class="hljs-built_in">series_of</span>(redisTask);<br>series-&gt;<span class="hljs-built_in">set_context</span>(<span class="hljs-type">void</span>* context);	<span class="hljs-comment">// 设置序列共享内容</span><br><span class="hljs-type">void</span>* context = series-&gt;<span class="hljs-built_in">get_context</span>();	<span class="hljs-comment">// 获取序列共享内容</span><br>series-&gt;<span class="hljs-built_in">set_callback</span>(<span class="hljs-type">void</span>* SeriesCallback); <span class="hljs-comment">// 设置序列结束的回调函数，可用于删除堆中的共享内容</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-3-并行任务ParallelWork"><a href="#2-2-3-并行任务ParallelWork" class="headerlink" title="2.2.3 并行任务ParallelWork"></a>2.2.3 并行任务ParallelWork</h3><p>由若干个并行的序列合成的任务</p>
+<p>例子：先买完零食再吃，买的动作并行，吃必须在全买完再进行</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// 创建并行任务</span><br>ParallelWork *pwork = Workflow::<span class="hljs-built_in">create_parallel_work</span>(parallelCallback);<br><br><span class="hljs-comment">// 创建若干任务</span><br>std::vector&lt;std::string&gt; urlVec = &#123;<span class="hljs-string">&quot;http://www.baidu.com&quot;</span>, <span class="hljs-string">&quot;http://www.jd.com&quot;</span>, <span class="hljs-string">&quot;http://192.168.200.128:9913&quot;</span>&#125;;<br><span class="hljs-keyword">for</span>(<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i != urlVec.<span class="hljs-built_in">size</span>(); ++i)&#123;<br>    <span class="hljs-comment">// 创建若干任务</span><br>    std::string url = urlVec[i];<br>    <span class="hljs-keyword">auto</span> httpTask = WFTaskFactory::<span class="hljs-built_in">create_http_task</span>(url, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, httpCallback);<br><br>    <span class="hljs-comment">// 修改任务属性</span><br>    <span class="hljs-keyword">auto</span> req = httpTask-&gt;<span class="hljs-built_in">get_req</span>();<br>    req-&gt;<span class="hljs-built_in">add_header_pair</span>(<span class="hljs-string">&quot;Accept&quot;</span>, <span class="hljs-string">&quot;*/*&quot;</span>);<br>    req-&gt;<span class="hljs-built_in">add_header_pair</span>(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;myHttpTask&quot;</span>);<br>    req-&gt;<span class="hljs-built_in">add_header_pair</span>(<span class="hljs-string">&quot;Connect&quot;</span>, <span class="hljs-string">&quot;close&quot;</span>);<br><br>    <span class="hljs-comment">// 为响应内容创建堆空间</span><br>    SeriesContext *context = <span class="hljs-keyword">new</span> SeriesContext;<br>    context-&gt;url = std::<span class="hljs-built_in">move</span>(url);<br><br>    <span class="hljs-comment">// 为每个任务创建一个序列</span><br>    <span class="hljs-keyword">auto</span> series = Workflow::<span class="hljs-built_in">create_series_work</span>(httpTask, <span class="hljs-literal">nullptr</span>);<br>    series-&gt;<span class="hljs-built_in">set_context</span>(context);<br><br>    <span class="hljs-comment">// 把序列加入并行任务</span><br>    pwork-&gt;<span class="hljs-built_in">add_series</span>(series);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-3-workflow设计特点"><a href="#2-3-workflow设计特点" class="headerlink" title="2.3 workflow设计特点"></a>2.3 workflow设计特点</h2><p>1、所有任务都必须放入序列中进行执行，所有单个任务都默认放进了一个序列</p>
+<p>2、序列之间是并行的</p>
+<p>3、若某事情需要等待所有序列任务都完成后执行，则使用并行任务</p>
+<p>4、并行任务也是任务，又可以放入序列</p>
+<h2 id="2-4-workflow服务端"><a href="#2-4-workflow服务端" class="headerlink" title="2.4 workflow服务端"></a>2.4 workflow服务端</h2><p>服务端接收请求 &#x3D;&#x3D;&gt; 处理请求 &#x3D;&#x3D;&gt; (如果有新请求，添加到process之前) &#x3D;&#x3D;&gt; 执行process &#x3D;&#x3D;&gt; 执行回调函数</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">callback</span><span class="hljs-params">()</span></span>&#123;&#125;		<span class="hljs-comment">// 如果process中再添加callback函数，则在server_callback运行完后</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">process</span><span class="hljs-params">(WFHttpTask *serverTask)</span></span>&#123;<br>    <span class="hljs-keyword">auto</span> rsp = serverTask-&gt;<span class="hljs-built_in">get_resp</span>();<br>    rsp-&gt;<span class="hljs-built_in">set_http_version</span>(<span class="hljs-string">&quot;HTTP/1.1&quot;</span>);<br>    rsp-&gt;<span class="hljs-built_in">set_status_code</span>(<span class="hljs-string">&quot;200&quot;</span>);<br>    rsp-&gt;<span class="hljs-built_in">set_reason_phrase</span>(<span class="hljs-string">&quot;OK&quot;</span>);<br>    rsp-&gt;<span class="hljs-built_in">set_header_pair</span>(<span class="hljs-string">&quot;Content-Type&quot;</span>, <span class="hljs-string">&quot;text/plain&quot;</span>);<br>    rsp-&gt;<span class="hljs-built_in">append_output_body</span>(<span class="hljs-string">&quot;hello\n&quot;</span>);<br>    serverTask-&gt;<span class="hljs-built_in">set_callback</span>([](WFHttpTask *serverTask)&#123;	<span class="hljs-comment">// 先运行完process 再运行该回调</span><br>        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;server Task is running\n&quot;</span>);<br>    &#125;)<br>    <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;process is running\n&quot;</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-built_in">signal</span>(SIGINT, sigHandler);<br><br>    <span class="hljs-comment">// 创建服务端</span><br>    <span class="hljs-function">WFHttpServer <span class="hljs-title">server</span><span class="hljs-params">(process)</span></span>;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-number">0</span> != server.<span class="hljs-built_in">start</span>(<span class="hljs-number">19913</span>))&#123;<br>        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;server start error\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    <br>    waitGroup.<span class="hljs-built_in">wait</span>();<br>    server.<span class="hljs-built_in">stop</span>();<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>服务端代理</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">httpCallback</span><span class="hljs-params">()</span></span>&#123;&#125;<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">process</span><span class="hljs-params">(WFHttpTask *serverTask)</span></span>&#123;<br>    WFHttpTask* httptask = WFFactory::<span class="hljs-built_in">create_http_task</span>(<span class="hljs-string">&quot;http://www.baidu.com&quot;</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, httpCallback);<br>    <span class="hljs-built_in">series_of</span>(serverTask)-&gt;<span class="hljs-built_in">set_callback</span>(serverCallback);<br>&#125;<br><span class="hljs-comment">// 任务顺序：server-&gt;process-&gt;httptask-&gt;serverCallback-&gt;httpCallback</span><br></code></pre></td></tr></table></figure>
+
+<p>异步文件读写的IO操作</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-built_in">read</span>(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> size);<br><span class="hljs-built_in">write</span>(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> size);<br><br><span class="hljs-comment">// pread 和 pwrite 底层使用aio</span><br><span class="hljs-built_in">pread</span>(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> size, <span class="hljs-type">offset_t</span> offset);<br><span class="hljs-built_in">pwrite</span>(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *buf, <span class="hljs-type">size_t</span> size, <span class="hljs-type">offset_t</span> offset);<br><br><span class="hljs-built_in">aio_read</span>(<span class="hljs-keyword">struct</span> aiocb *aiocbp);	<span class="hljs-comment">// enqueue read task，不一定是立刻执行</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">aiocb</span>&#123;<br>    <span class="hljs-type">int</span> 	aio_fildes;		<span class="hljs-comment">// 文件描述符</span><br>    <span class="hljs-type">off_t</span> 	aio_offset;		<span class="hljs-comment">// 偏移量</span><br>    <span class="hljs-keyword">volatile</span> <span class="hljs-type">void</span> *aio_buf;	<span class="hljs-comment">// 内容</span><br>    <span class="hljs-type">size_t</span> 	aio_nbytes;<br>    <span class="hljs-type">int</span>		aio_reqprio;<br>    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">sigevent</span> aio_sigevent;	<span class="hljs-comment">// 回调函数</span><br>    <span class="hljs-type">int</span> 	aio_lio_opcode;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-5-workflow总结"><a href="#2-5-workflow总结" class="headerlink" title="2.5 workflow总结"></a>2.5 workflow总结</h2><p><img src="/2024/08/25/HTTP%E6%9C%8D%E5%8A%A1%E5%99%A8/Users\12143\Moonlights\source_posts\HTTP服务器\workflow总结.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="2-6-静态资源服务器–登录"><a href="#2-6-静态资源服务器–登录" class="headerlink" title="2.6 静态资源服务器–登录"></a>2.6 静态资源服务器–登录</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">SeriesContext</span>&#123;<br>    WFHttpTask *serverTask;<br>    <span class="hljs-type">int</span> fd;<br>    <span class="hljs-type">char</span> *buf;<br>    std::string name;<br>    std::string pwd;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">redisCallback</span><span class="hljs-params">(WFRedisTask* redisTask)</span></span>&#123;&#125; <span class="hljs-comment">// redis检测登录的回调函数，将结果写到服务器resp</span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">IOCallback</span><span class="hljs-params">(WFFileIOTask *IOTask)</span></span>&#123;<br>    <span class="hljs-comment">// fd用open获得的文件描述符，buf缓存，filesize缓存大小, 0偏移量，IOCallback读文件回调函数</span><br>    <span class="hljs-keyword">auto</span> *IOTask = WFTaskFactory::<span class="hljs-built_in">create_pread_task</span>(fd, buf, filesize, <span class="hljs-number">0</span>, IOCallback);<br>&#125;	<span class="hljs-comment">// IO读文件回调函数，将读取的文件内容写到服务器resp</span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">process</span><span class="hljs-params">(WFHttpTask *serverTask)</span></span>&#123;&#125;	<span class="hljs-comment">// 服务器任务，每次连接就执行一次process</span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-function">WFHttpServer <span class="hljs-title">server</span><span class="hljs-params">(process)</span></span>;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-number">0</span> != server.<span class="hljs-built_in">start</span>(<span class="hljs-number">19913</span>)) <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    <br>    waitGroup.<span class="hljs-built_in">wait</span>();<br>    server.<span class="hljs-built_in">stop</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-7-分块上传"><a href="#2-7-分块上传" class="headerlink" title="2.7 分块上传"></a>2.7 分块上传</h2><p>分块上传项目， P2P协议个人到个人（例如网盘下载其它人的资源），P2C是个人到公司（比如个人向公司贷款）</p>
+<p>1、初始化上传：为不同文件上传任务分配不同的ID：”用户名+上传时间“，客户端使用JSON包装文件信息</p>
+<p>2、单个分片：存储文件的某个分片任务</p>
+<p>3、分片信息查询：记录分配信息，判断哪些已经上传</p>
+<p>4、分片合并：如果所有分片都已经上传完成，则合并分片得到完整文件</p>
+<p>服务端需要将分块总数量，上传ID和其它文件相关信息返回给客户端</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">// 解析uri，判断任务</span><br><span class="hljs-keyword">auto</span> req = serverTask-&gt;<span class="hljs-built_in">get_req</span>();<br>std::string uri = req-&gt;<span class="hljs-built_in">get_request_uri</span>();<br>std::string method = req-&gt;<span class="hljs-built_in">get_method</span>();<br>std::string query = uri.<span class="hljs-built_in">substr</span>(uri.<span class="hljs-built_in">find</span>(<span class="hljs-string">&quot;?&quot;</span>) + <span class="hljs-number">1</span>);<br><span class="hljs-comment">// 1、初始化请求报文体</span><br><span class="hljs-type">const</span> <span class="hljs-type">void</span> *body; <span class="hljs-type">size_t</span> size;<br>req-&gt;<span class="hljs-built_in">get_parsed_body</span>(&amp;body, &amp;size);<br><span class="hljs-comment">// 根据请求方法调用对应任务</span><br><span class="hljs-keyword">if</span>(method == <span class="hljs-string">&quot;POST&quot;</span> &amp;&amp; path == <span class="hljs-string">&quot;file/mupload/init&quot;</span>)&#123;<br>    <span class="hljs-comment">// 2、将报文解析为Json对象，获得文件名filename,文件哈希filehas，文件大小filesize</span><br>    Json fileInfo = Json::<span class="hljs-built_in">parse</span>(<span class="hljs-built_in">static_cast</span>&lt;<span class="hljs-type">const</span> <span class="hljs-type">char</span>*&gt;(body));<br>    <span class="hljs-comment">// 3、初始分块信息uploadID,分块数量chunkcount,分块大小chunksize</span><br>    std::string uploadID = name + time; <span class="hljs-comment">//time采用tm格式的时+分，使用snprintf拼接</span><br>    <span class="hljs-comment">// 4、生成对客户端的响应，创建一个Json对象</span><br>	Json uppartInfo; <span class="hljs-comment">// 包装status，uploadID，chunkcount，chunksize，filesize,filehash</span><br>    <span class="hljs-comment">// 5、将信息写入缓存</span><br>    std::vector&lt;std::vector&lt;std::string&gt;&gt; argsVec = &#123;<br>        &#123;<span class="hljs-string">&quot;MP_&quot;</span>+uploadID, <span class="hljs-string">&quot;chunkcount&quot;</span>, std::<span class="hljs-built_in">to_string</span>(chunkcount)&#125;,<br>        &#123;<span class="hljs-string">&quot;MP_&quot;</span>+uploadID, <span class="hljs-string">&quot;filehash&quot;</span>, fil ehash&#125;,<br>        &#123;<span class="hljs-string">&quot;MP_&quot;</span>+uploadID, <span class="hljs-string">&quot;filesize&quot;</span>, std::<span class="hljs-built_in">to_string</span>(filesize)&#125;<br>    &#125;;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; ++i)&#123;<br>        <span class="hljs-keyword">auto</span> redisTask = WFTaskFactory::<span class="hljs-built_in">create_redis_task</span>(<span class="hljs-string">&quot;redis://127.0.0.1:6379&quot;</span>, <span class="hljs-number">2</span>, <span class="hljs-literal">nullptr</span>);<br>        redisTask-&gt;<span class="hljs-built_in">get_req</span>()-&gt;<span class="hljs-built_in">set_request</span>(<span class="hljs-string">&quot;HSET&quot;</span>, argsVec[i]);<br>        redisTask-&gt;<span class="hljs-built_in">start</span>();<br>    &#125;<br>    <span class="hljs-comment">// 6、提示结果，将文件的分片信息返还给客户端，客户端根据分片情况进行分片上传</span><br>&#125;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(method == <span class="hljs-string">&quot;POST&quot;</span> &amp;&amp; path == <span class="hljs-string">&quot;file/mupload/uppart&quot;</span>)&#123;<br>    <span class="hljs-comment">// 2、解析请求体</span><br>    std::string uploadID = query.<span class="hljs-built_in">substr</span>(<span class="hljs-number">0</span>, query.<span class="hljs-built_in">find</span>(<span class="hljs-string">&quot;&amp;&quot;</span>));<br>    std::string chkidx = query.<span class="hljs-built_in">substr</span>(query.<span class="hljs-built_in">find</span>(<span class="hljs-string">&quot;&amp;&quot;</span>) + <span class="hljs-number">1</span>);<br>    <span class="hljs-comment">// 3、初始化文件，创建文件夹和文件，将当前块内容写入文件</span><br>    redistTask-&gt;<span class="hljs-built_in">get_req</span>()-&gt;<span class="hljs-built_in">set_request</span>(<span class="hljs-string">&quot;HGET&quot;</span>, &#123;uploadID, <span class="hljs-string">&quot;filehash&quot;</span>&#125;);<br>    <span class="hljs-comment">// 4、文件写入完成，记录进度到redis</span><br>    redistTask-&gt;<span class="hljs-built_in">get_req</span>()-&gt;<span class="hljs-built_in">set_request</span>(<span class="hljs-string">&quot;HSET&quot;</span>, &#123;uploadID, <span class="hljs-string">&quot;chkidx_&quot;</span>+chkidx, <span class="hljs-string">&quot;1&quot;</span>&#125;);<br>    <span class="hljs-comment">// 5、提示结果</span><br>    serverTask-&gt;<span class="hljs-built_in">get_resp</span>()-&gt;<span class="hljs-built_in">append_output_body</span>(<span class="hljs-string">&quot;SUCCESS&quot;</span>);<br>&#125;<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(method == <span class="hljs-string">&quot;GET&quot;</span> &amp;&amp; path == <span class="hljs-string">&quot;file/mupload/complete&quot;</span>)&#123;<br>    <span class="hljs-comment">// 2、解析请求体</span><br>    std::string uploadID = query.<span class="hljs-built_in">substr</span>(<span class="hljs-number">0</span>, query.<span class="hljs-built_in">find</span>(<span class="hljs-string">&quot;&amp;&quot;</span>));<br>    <span class="hljs-comment">// 3、查询redis</span><br>    redistTask-&gt;<span class="hljs-built_in">get_req</span>()-&gt;<span class="hljs-built_in">set_request</span>(<span class="hljs-string">&quot;HGETALL&quot;</span>, &#123;uploadID&#125;);<br>    <span class="hljs-comment">// 4、回调函数中判断 chunkcount == count(chkidx_);</span><br>    <span class="hljs-comment">// 5、提示结果，数据是否完整</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="3-wfrest–workflow解析库"><a href="#3-wfrest–workflow解析库" class="headerlink" title="3 wfrest–workflow解析库"></a>3 wfrest–workflow解析库</h1><p>完全支持workflow操作，添加了对workflow请求的解析，便于对大量内容进行解析</p>
+<h2 id="3-1-网盘上传和下载"><a href="#3-1-网盘上传和下载" class="headerlink" title="3.1 网盘上传和下载"></a>3.1 网盘上传和下载</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;LinuxHead.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;workflow/WFFacilities.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;wfrest/HttpServer.h&quot;</span></span><br><br><span class="hljs-function"><span class="hljs-type">static</span> WFFacilities::WaitGroup <span class="hljs-title">waitGroup</span><span class="hljs-params">(<span class="hljs-number">1</span>)</span></span>;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">sigHandler</span><span class="hljs-params">(<span class="hljs-type">int</span> num)</span></span>&#123;<br>    waitGroup.<span class="hljs-built_in">done</span>();<br>    <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;wait group is done\n&quot;</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-built_in">signal</span>(SIGINT, sigHandler);<br>    wfrest::HttpServer server;<br>    server.<span class="hljs-built_in">GET</span>(<span class="hljs-string">&quot;/file/upload&quot;</span>, [](<span class="hljs-type">const</span> wfrest::HttpReq *req, wfrest::HttpResp *rsp)&#123;<br>        rsp-&gt;<span class="hljs-built_in">File</span>(<span class="hljs-string">&quot;./html/post1.html&quot;</span>);<br>    &#125;);<br>    server.<span class="hljs-built_in">POST</span>(<span class="hljs-string">&quot;file/upload&quot;</span>, [](<span class="hljs-type">const</span> wfrest::HttpReq *req, wfrest::HttpResp *rsp)&#123;<br>        <span class="hljs-comment">// 读取文件内容, 解析formdata格式数据</span><br>        <span class="hljs-keyword">if</span>(req-&gt;<span class="hljs-built_in">content_type</span>() != wfrest::MULTIPART_FORM_DATA)&#123;<br>            rsp-&gt;<span class="hljs-built_in">set_status_code</span>(<span class="hljs-string">&quot;500&quot;</span>);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-keyword">using</span> Form = std::map&lt;std::string, std::pair&lt;std::string, std::string&gt;&gt;;<br>        Form &amp;form = req-&gt;form();<br>        std::pair&lt;std::string, std::string&gt; fileInfo = form[<span class="hljs-string">&quot;file&quot;</span>];<br>        <span class="hljs-comment">// fileInfo.first fileInfo.second</span><br>        std::string filePath = <span class="hljs-string">&quot;html/&quot;</span> + fileInfo.first;<br>        <span class="hljs-comment">//fprintf(stderr, &quot;filePath = %s\n&quot;, filePath.c_str());</span><br>        <span class="hljs-type">int</span> fd = <span class="hljs-built_in">open</span>(filePath.<span class="hljs-built_in">c_str</span>(), O_RDWR|O_CREAT, <span class="hljs-number">0666</span>);<br>        <span class="hljs-built_in">write</span>(fd, fileInfo.second.<span class="hljs-built_in">c_str</span>(), fileInfo.second.<span class="hljs-built_in">size</span>());<br>        <span class="hljs-built_in">close</span>(fd);<br><br>        <span class="hljs-comment">// 需要添加参数SeriesWork *series</span><br>        <span class="hljs-comment">//auto pwriteTask = WFTaskFactory::create_pwrite_task(fd, fileInfo.second.c_str(), fileInfo.second.size(), 0, callback);</span><br>        <span class="hljs-comment">//series-&gt;push_back(pwriteTask);</span><br><br>        <span class="hljs-comment">// 通过重定向来得到成功页面</span><br>        rsp-&gt;<span class="hljs-built_in">set_status_code</span>(<span class="hljs-string">&quot;302&quot;</span>);<br>        rsp-&gt;headers[<span class="hljs-string">&quot;Location&quot;</span>] = <span class="hljs-string">&quot;/file/upload/success&quot;</span>;<br>    &#125;);<br>    server.<span class="hljs-built_in">GET</span>(<span class="hljs-string">&quot;/file/upload/success&quot;</span>, [](<span class="hljs-type">const</span> wfrest::HttpReq *req, wfrest::HttpResp *rsp)&#123;<br>        rsp-&gt;<span class="hljs-built_in">String</span>(<span class="hljs-string">&quot;Upload success&quot;</span>);<br>    &#125;);<br>    server.<span class="hljs-built_in">GET</span>(<span class="hljs-string">&quot;file/download&quot;</span>, [](<span class="hljs-type">const</span> wfrest::HttpReq *req, wfrest::HttpResp *rsp)&#123;<br>        rsp-&gt;<span class="hljs-built_in">String</span>(<span class="hljs-string">&quot;Upload success&quot;</span>);<br>        <span class="hljs-comment">// /file/download?filehash=2aae6c35c94fcfb415dbe95f408b9ce91ee846ed&amp;filename=test.txt&amp;filesize=11</span><br>        <span class="hljs-keyword">auto</span> fileInfo = req-&gt;<span class="hljs-built_in">query_list</span>();<br>        std::string filesha1 = fileInfo[<span class="hljs-string">&quot;filehash&quot;</span>];<br>        std::string filename = fileInfo[<span class="hljs-string">&quot;filename&quot;</span>];<br>        <span class="hljs-type">int</span> filesize = std::<span class="hljs-built_in">stoi</span>(fileInfo[<span class="hljs-string">&quot;filesize&quot;</span>]);<br>        std::string filepath = <span class="hljs-string">&quot;html/&quot;</span> + filename;<br>        <br>        <span class="hljs-comment">// 同步下载</span><br>        <span class="hljs-comment">// int fd = open(filepath.c_str(), O_RDONLY);</span><br>        <span class="hljs-comment">// std::unique_ptr&lt;char []&gt; wbuf(new char[filesize]);</span><br>        <span class="hljs-comment">// // int size = lseek(fd, 0, SEEK_END);</span><br>        <span class="hljs-comment">// // lseek(fd, 0, SEEK_SET);</span><br>        <span class="hljs-comment">// read(fd, wbuf.get(), filesize);</span><br>        <span class="hljs-comment">// rsp-&gt;append_output_body(wbuf.get(), filesize);</span><br>        <span class="hljs-comment">// rsp-&gt;headers[&quot;Content-Type&quot;] = &quot;application/octect-stream&quot;;</span><br>        <span class="hljs-comment">// rsp-&gt;headers[&quot;Content-disposition&quot;] = &quot;attachment; filename=&quot;+filename;</span><br>		<br>        <span class="hljs-comment">// 使用nginx作为静态资源服务器代理下载</span><br>        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;%s&quot;</span>, filename.<span class="hljs-built_in">c_str</span>());<br>        rsp-&gt;<span class="hljs-built_in">set_status_code</span>(<span class="hljs-string">&quot;302&quot;</span>); <br>        rsp-&gt;headers[<span class="hljs-string">&quot;Location&quot;</span>] = <span class="hljs-string">&quot;http://192.168.31.182:9913/&quot;</span>+filename;<br>    &#125;);<br><br>    <span class="hljs-keyword">if</span>(server.<span class="hljs-built_in">track</span>().<span class="hljs-built_in">start</span>(<span class="hljs-number">19913</span>) == <span class="hljs-number">0</span>)&#123;<br>        waitGroup.<span class="hljs-built_in">wait</span>();<br>        server.<span class="hljs-built_in">stop</span>();<br>    &#125;<br>    <span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;server error\n&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-2-引入数据库"><a href="#3-2-引入数据库" class="headerlink" title="3.2 引入数据库"></a>3.2 引入数据库</h2><p>全局文件表：tbl_file</p>
+<p>用户表： tbl_user  &#x3D;&#x3D;&gt; token表做登录缓存，可用reids expire设置过期时间</p>
+<p>用户文件表：tbl_user_file</p>
+<h1 id="4-云端存储OSS"><a href="#4-云端存储OSS" class="headerlink" title="4 云端存储OSS"></a>4 云端存储OSS</h1><p>存储Bucket	&#x3D;&#x3D;&gt;	文件夹	&#x3D;&#x3D;&gt;	存储对象的容器</p>
+<p>对象Object	&#x3D;&#x3D;&gt;	文件	&#x3D;&#x3D;&gt;	对象是OSS存储的基本单元(OSS文件)，对象由元信息、用户数据和文件名组成</p>
+<p>地域Region	&#x3D;&#x3D;&gt;	远端服务器地域</p>
+<p>域名Endpoint	&#x3D;&#x3D;&gt;	HTTP访问的域名	&#x3D;&#x3D;&gt;	OSS以HTTP RESTful API的形式对外提供服务</p>
+<p>密钥AccessKey	&#x3D;&#x3D;&gt;	身份ID和密码Secret	&#x3D;&#x3D;&gt;	加密验证</p>
+<p>1、创建存储库Bucket</p>
+<h1 id="5-容器docker"><a href="#5-容器docker" class="headerlink" title="5 容器docker"></a>5 容器docker</h1><h2 id="5-1-docker配置"><a href="#5-1-docker配置" class="headerlink" title="5.1 docker配置"></a>5.1 docker配置</h2><p>下载docker并配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo apt install docker.io	<span class="hljs-comment">#下载docker</span><br>sudo systemctl <span class="hljs-built_in">enable</span> --now docker	<span class="hljs-comment">#自启动</span><br>sudo docker run hello-world	<span class="hljs-comment">#测试</span><br></code></pre></td></tr></table></figure>
+
+<p>配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p /ect/docker/daemon.json<br>vim daemon.json<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">&#123;<br>    <span class="hljs-string">&quot;registry-mirrors&quot;</span>: [<br>        <span class="hljs-string">&quot;https://do.nark.eu.org&quot;</span>,<br>        <span class="hljs-string">&quot;https://dc.j8.work&quot;</span>,<br>        <span class="hljs-string">&quot;https://docker.m.daocloud.io&quot;</span>,<br>        <span class="hljs-string">&quot;https://dockerproxy.com&quot;</span>,<br>        <span class="hljs-string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span>,<br>        <span class="hljs-string">&quot;https://docker.nju.edu.cn&quot;</span><br>    ]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>更新配置和重加载</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">sudo systemctl daemon-reload<br>sudo systemctl restart docker<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-2-容器功能"><a href="#5-2-容器功能" class="headerlink" title="5.2 容器功能"></a>5.2 容器功能</h2><p>部署轻量级的虚拟机 &#x3D;&#x3D;&gt; docker (事实上的容器标准) &#x3D;&#x3D;&gt; 通过镜像启动的应用</p>
+<p>隔离性：把运行所需要的代码，库，依赖，配置，运行时的环境打包在一起成为一个标准单元 &#x3D;&#x3D;&gt; 镜像</p>
+<p>应用层 &lt;&#x3D;&#x3D;&gt; 容器 &lt;&#x3D;&#x3D;&gt; 内核 ( 共享内核，namespace分隔，Cgroup限定容器的资源上限) &lt;&#x3D;&#x3D;&gt; 硬件</p>
+<p>镜像：层次结构，把应用所有的代码，库，依赖都打包到一起成为的资源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker pull				<span class="hljs-comment"># 拉取下载镜像</span><br>docker images			<span class="hljs-comment"># 查看下载的镜像</span><br>docker rmi <span class="hljs-string">&#x27;id&#x27;</span>			<span class="hljs-comment"># 删除id对应的镜像</span><br>docker ps				<span class="hljs-comment"># 查看运行的容器，-a所有的容器</span><br>docker start / stop		<span class="hljs-comment"># 将暂停的容器启动，将启动的容器暂停</span><br></code></pre></td></tr></table></figure>
+
+<p>docker run复杂操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run nginx:latest <span class="hljs-built_in">echo</span> hello	<br><span class="hljs-comment"># 第一个命令: 启动 run</span><br><span class="hljs-comment"># 第二个命令：指定镜像 nginx:1.26.2 不指定默认最新版本</span><br><span class="hljs-comment"># 第三个命令：指定nginx运行的工作为 echo hello</span><br><br>docker run -it nginx:1.26.2 /bin/bash<br><span class="hljs-comment"># -i 将宿主机标准输入引入到容器中</span><br><span class="hljs-comment"># -t 创建一个终端</span><br><br>ctrl+d  ctrl+p+q		<span class="hljs-comment"># 退出容器，d关闭，p+q退出但不关闭</span><br>docker run -d nginx:1.26.2	<span class="hljs-comment">#启动一个后台运行容器</span><br><br>docker <span class="hljs-built_in">exec</span> -it <span class="hljs-string">&#x27;id&#x27;</span> /bin/bash <br><span class="hljs-comment"># 将后台容器启动终端到前台</span><br><br>docker run -d -p 0.0.0.0:8080:80 nginx:1.26.2 <br><span class="hljs-comment">#端口映射，ip默认0.0.0.0可以不输入， 将端口主机8080 -&gt; 容器80</span><br></code></pre></td></tr></table></figure>
+
+<p>容器持久化：挂载mount命令将容器挂载到宿主机的某一目录实现持久化，宿主和容器都可以看到这部分修改。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -p 8082:80 -v /home/qinzhi/workplace/html:/usr/share/nginx/html -d nginx<br><span class="hljs-comment"># 把/usr/share/nginx/html目录挂载到/home/tmp/html目录下，宿主机和容器共享该文件目录控制持久化</span><br><span class="hljs-comment"># -p 指定映射端口</span><br><span class="hljs-comment"># -v 指定挂载目录</span><br></code></pre></td></tr></table></figure>
+
+<p>应用场景：如果电脑新增磁盘内存，就可通过挂载到主机目录上使用</p>
+<h2 id="5-3-制作容器"><a href="#5-3-制作容器" class="headerlink" title="5.3 制作容器"></a>5.3 制作容器</h2><p>制作文件：docker commit -c Dockerfile</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#wfrest的docker配置文件DockeFile如下</span><br>RUN apt-get update\<br>	&amp;&amp; apt-get install -y vim git g++ cmake make libssl-dev libgtest-dev zlib1g-dev \<br>	&amp;&amp; apt-get clean &amp;&amp; <span class="hljs-built_in">rm</span> -rf /var/lib/apt/lists/* \<br>	&amp;&amp; git <span class="hljs-built_in">clone</span> https://github.com/sogou/workflow.git \<br>	&amp;&amp; <span class="hljs-built_in">cd</span> workflow &amp;&amp; make -j &amp;&amp; make install \<br>	&amp;&amp; <span class="hljs-built_in">cd</span> .. &amp;&amp; <span class="hljs-built_in">rm</span> -rf workflow \<br>	&amp;&amp; git <span class="hljs-built_in">clone</span> https://github.com/wfrest/wfrest.git \<br>	&amp;&amp; <span class="hljs-built_in">cd</span> wfrest &amp;&amp; <span class="hljs-built_in">mkdir</span> build &amp;&amp; <span class="hljs-built_in">cd</span> build \<br>	&amp;&amp; cmake .. &amp;&amp; make -j &amp;&amp; make install<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="6-消息队列"><a href="#6-消息队列" class="headerlink" title="6 消息队列"></a>6 消息队列</h1><p>异步通信机制，MQ优势：实现逻辑解耦 (同步 –&gt; 异步) 消息持久化，瞬时数据量过大（削峰）</p>
+<p>实现消息队列的问题：</p>
+<p>1、跨机器通信，网络模型（连接，协议）</p>
+<p>2、主动拉取  –  推送消费</p>
+<p>3、削峰  –  消费限流（滑动窗口）</p>
+<p>4、路由规则</p>
+<p>中间件：不面向业务，不面向系统。例如数据库，缓存，消息队列等</p>
+<p>RabbitMQ 高可靠， Rocket 高可靠低延迟， Kafka 低延时高速度</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>RabbitMQ</th>
+<th>Kafka</th>
+<th>RocketMQ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>协议支持</strong></td>
+<td>AMQP</td>
+<td>自定义协议</td>
+<td>自定义协议</td>
+</tr>
+<tr>
+<td><strong>消息传递模式</strong></td>
+<td>点对点、发布&#x2F;订阅、消息广播</td>
+<td>发布&#x2F;订阅</td>
+<td>点对点、发布&#x2F;订阅</td>
+</tr>
+<tr>
+<td><strong>持久化</strong></td>
+<td>支持消息持久化到磁盘</td>
+<td>持久化存储到磁盘</td>
+<td>支持消息持久化，提供同步刷盘和异步复制机制</td>
+</tr>
+<tr>
+<td><strong>吞吐量</strong></td>
+<td>中等，适合中小规模应用</td>
+<td>高，能够处理百万级消息量</td>
+<td>高，适用于大规模数据处理场景</td>
+</tr>
+<tr>
+<td><strong>延迟</strong></td>
+<td>较低，但不如Kafka</td>
+<td>极低</td>
+<td>较低，接近Kafka</td>
+</tr>
+<tr>
+<td><strong>扩展性</strong></td>
+<td>支持集群部署，可水平扩展</td>
+<td>支持分布式部署和水平扩展</td>
+<td>支持分布式部署和水平扩展</td>
+</tr>
+<tr>
+<td><strong>可靠性</strong></td>
+<td>高，支持消息确认机制</td>
+<td>高，通过分区和复制机制保证</td>
+<td>高，提供副本机制和故障转移</td>
+</tr>
+<tr>
+<td><strong>应用场景</strong></td>
+<td>异步通信、任务队列、事件驱动架构</td>
+<td>实时数据处理、大数据分析、日志收集</td>
+<td>实时数据处理、大规模数据处理、分布式系统集成</td>
+</tr>
+</tbody></table>
+<p>AMQP定义了若干个组件</p>
+<p>交换器： Exchange	&#x3D;&#x3D;&gt; 决定消息使用什么样的路由到队列中</p>
+<p>队列：Queue	&#x3D;&#x3D;&gt; 存放任务，一个队列对应一个消费者</p>
+<p>绑定：Binding	&#x3D;&#x3D;&gt; 用于告诉交换器应该将消息存入哪个队列中</p>
+<h2 id="6-1-路由模式"><a href="#6-1-路由模式" class="headerlink" title="6.1 路由模式"></a>6.1 路由模式</h2><p>direct模式（单播）：只要queue的binging key和消息的key完全一致，exchange就可以转发</p>
+<p>fanout模式（广播）：交换器不做工作，消息绑定到所有队列中，追求极致性能</p>
+<p>topic模式（组播）：通配符匹配key</p>
+<p>headers模式（精准，慢）：使用消息的header来确定投发</p>
+<h2 id="6-2-配置RabbitMQ"><a href="#6-2-配置RabbitMQ" class="headerlink" title="6.2 配置RabbitMQ"></a>6.2 配置RabbitMQ</h2><p>使用容器docker进行部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d --hostname rabbitsvr --name rabbit -p 5672:5672 -p 15672:15672 -p 25672:25672 -v /data/rabbitmq:/var/lib/rabbitmq rabbitmq:management<br><span class="hljs-comment"># hostname 网络主机域名</span><br><span class="hljs-comment"># name	容器名</span><br><span class="hljs-comment"># 5672	做API访问</span><br><span class="hljs-comment"># 15672	做Web访问</span><br><span class="hljs-comment"># 25672	做集群通信</span><br><span class="hljs-comment"># /data/rabbitmq 做持久化目录</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="6-3-使用RabbiMQ"><a href="#6-3-使用RabbiMQ" class="headerlink" title="6.3 使用RabbiMQ"></a>6.3 使用RabbiMQ</h2><p>登录网页 ip:15672</p>
+<p>1、创建exchange	direct模式</p>
+<p>2、创建若干个queue</p>
+<p>3、为每个queue设置binging key</p>
+<p>4、exchange发送消息publish message</p>
+<h2 id="6-4-在网盘中引入RabbitMQ"><a href="#6-4-在网盘中引入RabbitMQ" class="headerlink" title="6.4 在网盘中引入RabbitMQ"></a>6.4 在网盘中引入RabbitMQ</h2><p>先在网页15672端口构建消息队列和分发器，再封装为结构体</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">RabbitMQInfo</span>&#123;<br>    std::string RabbitURL = <span class="hljs-string">&quot;amqp://guest:guest@192.168.31.182:5672&quot;</span>;<br>    std::string TransExchangeName = <span class="hljs-string">&quot;uploadserver.trans&quot;</span>;<br>    std::string TransQueueName = <span class="hljs-string">&quot;uploadserver.trans.OSS&quot;</span>;<br>    std::string TransRoutingKey = <span class="hljs-string">&quot;OSS&quot;</span>;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;rabit.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;SimpleAmqpClient/SimpleAmqpClient.h&quot;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">// 指定MQ消息</span><br>    RabbitMQInfo MQInfo;<br>    <span class="hljs-comment">// 创建一条和MQ的连接</span><br>    AmqpClient::Channel::<span class="hljs-type">ptr_t</span> channel = AmqpClient::Channel::<span class="hljs-built_in">Create</span>();<br>    <span class="hljs-comment">// pause(); // 持续连接不发消息</span><br>    <span class="hljs-comment">// 创建消息</span><br>    AmqpClient::BasicMessage::<span class="hljs-type">ptr_t</span> message = AmqpClient::BasicMessage::<span class="hljs-built_in">Create</span>(<span class="hljs-string">&quot;Hello&quot;</span>);<br>    <span class="hljs-comment">// 发布消息</span><br>    channel-&gt;<span class="hljs-built_in">BasicPublish</span>(MQInfo.TransExchangeName, MQInfo.TransRoutingKey, message);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>消费者：阻塞等待到超时事件timeout，非阻塞在跨网时可能效率更慢，因为网速限制，请求需要时间。</p>
+<h1 id="7-微服务"><a href="#7-微服务" class="headerlink" title="7 微服务"></a>7 微服务</h1><p>单体应用耦合性太高，难以开发，性能较差，运维困难，因此需要使用微服务分离业务。</p>
+<p>函数调用 &#x3D;&#x3D;&gt; 网络通信 &#x3D;&#x3D;&gt; HTTP通信慢 &#x3D;&#x3D;&gt; 远程过程调用</p>
+<h2 id="7-1-REST和RPC区别"><a href="#7-1-REST和RPC区别" class="headerlink" title="7.1 REST和RPC区别"></a>7.1 REST和RPC区别</h2><p>REST是具体的接口设计风格，RPC是具体的技术。都是解决将单个应用拆分为微服务</p>
+<p>REST基于HTTP，兼容性，可读性强，消耗大；RPC是二进制传输，兼容性差一些，但消耗少，远程调用函数。</p>
+<h2 id="7-2-RPC的实现原理-–-代理模式"><a href="#7-2-RPC的实现原理-–-代理模式" class="headerlink" title="7.2 RPC的实现原理 – 代理模式"></a>7.2 RPC的实现原理 – 代理模式</h2><p>client &#x3D;&#x3D;&gt; client proxy &#x3D;&#x3D;&gt; socket    &lt;&#x3D;&#x3D;&gt;   socket &lt;&#x3D;&#x3D; server proxy &lt;&#x3D;&#x3D; server</p>
+<p>客户端存储服务器的代理，然后通过socket通信，服务端认为是内部的代理调用的函数</p>
+<h2 id="7-3-序列化protobuf-–-特别适配RPC的序列化方法"><a href="#7-3-序列化protobuf-–-特别适配RPC的序列化方法" class="headerlink" title="7.3 序列化protobuf – 特别适配RPC的序列化方法"></a>7.3 序列化protobuf – 特别适配RPC的序列化方法</h2><p>1、IDL文件(Interface Description Language) 接口描述语言</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs protobuf"><span class="hljs-comment">// proto2 格式</span><br><span class="hljs-keyword">message </span><span class="hljs-title class_">ReqSignup</span>&#123;<br>	<span class="hljs-comment">// required 必须出现一次， optional出现0~1次， repeated 可重复出现任意次</span><br>	<span class="hljs-keyword">required</span> <span class="hljs-type">string</span> username = <span class="hljs-number">1</span>;<br>	<span class="hljs-keyword">required</span> <span class="hljs-type">string</span> password = <span class="hljs-number">2</span>;<br>	<span class="hljs-keyword">optional</span> <span class="hljs-type">string</span> userdata = <span class="hljs-number">3</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs protobuf"><span class="hljs-comment">// proto3 格式</span><br>syntax = proto3;<br><span class="hljs-keyword">message </span><span class="hljs-title class_">ReqSignup</span>&#123;<br>	<span class="hljs-comment">// required，optional被删除，默认采用optional的形式，只保留repeated关键字</span><br>	<span class="hljs-type">string</span> username = <span class="hljs-number">1</span>;<br>	<span class="hljs-type">string</span> password = <span class="hljs-number">2</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>2、使用protoc将IDL文件转为语言文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">!/bin/bash<br>protoc --proto_path=. --cpp_out=. test.proto	<span class="hljs-comment">#生成CPP文件</span><br>protoc --proto_path=. --java_out=. test.proto	<span class="hljs-comment">#生成JAVA文件</span><br></code></pre></td></tr></table></figure>
+
+<p>序列化的结果解读</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs C++">ReqSignup msg;<br>msg.set_username = <span class="hljs-string">&quot;admin&quot;</span>;<br>msg.set_password = <span class="hljs-string">&quot;1234&quot;</span>;<br><span class="hljs-type">char</span> arr[<span class="hljs-number">100</span>] = &#123;<span class="hljs-number">0</span>&#125;;<br>msg.<span class="hljs-built_in">SerializeToArray</span>(arr, <span class="hljs-number">100</span>);<br><span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; ++i)&#123;<br>    <span class="hljs-built_in">fprintf</span>(stderr, <span class="hljs-string">&quot;%02x&quot;</span>, arr[i]);<br>&#125;<br><span class="hljs-comment">//输出: 0a0561646d696e120431323334 后面补0000...</span><br><span class="hljs-number">0</span>a = <span class="hljs-number">00001010</span>;	<span class="hljs-comment">// 00001 表示序号为1， 010 表示string</span><br><span class="hljs-number">05</span>;				<span class="hljs-comment">// 表示后面接5个值</span><br><span class="hljs-number">61646</span>d696e;		<span class="hljs-comment">// admin</span><br><span class="hljs-number">12</span> = <span class="hljs-number">00010010</span>;	<span class="hljs-comment">// 00010 表示序号为2， 010 表示string</span><br><span class="hljs-number">04</span>;				<span class="hljs-comment">// 后面接4个值</span><br><span class="hljs-number">31323334</span>;		<span class="hljs-comment">// 1234</span><br></code></pre></td></tr></table></figure>
+
+<p>3、向前兼容和向后兼容</p>
+<p>3.1、向前兼容：旧代码处理新消息</p>
+<p>新字段使用新编号，旧代码遇到新消息编号直接忽略，旧字段正常读，删除的字段保留编号，可以任意更换字段名</p>
+<p>3.2、向后兼容：新代码处理旧消息</p>
+<p>所有新加的字段属性都是默认optional</p>
+<h2 id="7-4-sRPC框架"><a href="#7-4-sRPC框架" class="headerlink" title="7.4 sRPC框架"></a>7.4 sRPC框架</h2><p>网络通信: workflow</p>
+<p>代理模式: </p>
+<p>序列化和反序列化:</p>
+<p>常见的框架: thrift &#x2F; gRPC (http2) &#x2F; bRPC (协程) &#x2F; TARS</p>
+<h3 id="7-4-1-使用sRPC重写注册业务"><a href="#7-4-1-使用sRPC重写注册业务" class="headerlink" title="7.4.1 使用sRPC重写注册业务"></a>7.4.1 使用sRPC重写注册业务</h3><p>Client  &lt;&#x3D;&#x3D;&gt;  API网关  &lt;&#x3D;&#x3D;&gt;  注册服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">srpc_generator protobuf signup.proto .<br><span class="hljs-comment"># srpc_generator 协议	文件 文件夹位置</span><br>.srpc.h		<span class="hljs-comment">#rpc的接口和设计</span><br>client_skeleton.cc	<span class="hljs-comment"># 客户端实例代码	有个Service类，虚函数signup，通过继承来重写函数</span><br>server_skeleton.cc	<span class="hljs-comment"># 服务端实例代码</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">signup_done</span><span class="hljs-params">(RespSignup *response, srpc::RPCContext *context)</span></span><br><span class="hljs-function"></span>&#123;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	GOOGLE_PROTOBUF_VERIFY_VERSION;<br>	<span class="hljs-type">const</span> <span class="hljs-type">char</span> *ip = <span class="hljs-string">&quot;127.0.0.1&quot;</span>;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">short</span> port = <span class="hljs-number">1412</span>;<br><br>	<span class="hljs-function">UserService::SRPCClient <span class="hljs-title">client</span><span class="hljs-params">(ip, port)</span></span>;	<span class="hljs-comment">// 绑定远程调用的代理ip和port</span><br><br>	<span class="hljs-comment">// example for RPC method call</span><br>	ReqSignup signup_req;<br>	<span class="hljs-comment">//signup_req.set_message(&quot;Hello, srpc!&quot;);</span><br>	client.<span class="hljs-built_in">Signup</span>(&amp;signup_req, signup_done);	<span class="hljs-comment">// 这个函数就是远程调用，signup_done就是回调</span><br><br>	wait_group.<span class="hljs-built_in">wait</span>();<br>	google::protobuf::<span class="hljs-built_in">ShutdownProtobufLibrary</span>();<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">UserServiceServiceImpl</span> : <span class="hljs-keyword">public</span> UserService::Service <span class="hljs-comment">//Seriver为抽象类</span><br>&#123;<br><span class="hljs-keyword">public</span>:<br>	<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Signup</span><span class="hljs-params">(ReqSignup *request, RespSignup *response, srpc::RPCContext *ctx)</span> <span class="hljs-keyword">override</span></span><br><span class="hljs-function">	</span>&#123;<br>		<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> fill server logic here</span><br>	&#125;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	GOOGLE_PROTOBUF_VERIFY_VERSION;<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">short</span> port = <span class="hljs-number">1412</span>;<br>	SRPCServer server;<br><br>    <span class="hljs-comment">// 注册服务</span><br>	UserServiceServiceImpl userservice_impl;<br>	server.<span class="hljs-built_in">add_service</span>(&amp;userservice_impl);<br><br>	server.<span class="hljs-built_in">start</span>(port);	<span class="hljs-comment">// 绑定端口，接收远程调用</span><br>	wait_group.<span class="hljs-built_in">wait</span>();<br>	server.<span class="hljs-built_in">stop</span>();<br>	google::protobuf::<span class="hljs-built_in">ShutdownProtobufLibrary</span>();<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-5-微服务的优点"><a href="#7-5-微服务的优点" class="headerlink" title="7.5 微服务的优点"></a>7.5 微服务的优点</h2><p><img src="/./HTTP%E6%9C%8D%E5%8A%A1%E5%99%A8/%E5%BE%AE%E6%9C%8D%E5%8A%A1.png" srcset="/img/loading.gif" lazyload></p>
+<p>1、开发和治理分离</p>
+<p>2、高内聚低耦合</p>
+<p>3、独立部署，易于升级</p>
+<p>4、容错性高</p>
+<p>5、异构系统：不同业务使用对应的语言代码来写</p>
+<h2 id="7-6-注册中心"><a href="#7-6-注册中心" class="headerlink" title="7.6 注册中心"></a>7.6 注册中心</h2><p>1、服务启动时将相关信息SET进入注册中心，客户端从注册中心GET读取信息再使用RPC</p>
+<p>2、注册中心：流量集中点，因此需要使用数据库集群或者去中心化</p>
+<p>服务 &#x3D;&#x3D;&gt; 注册 &#x3D;&#x3D;&gt; consul（raft 共识算法） &lt;&#x3D;&#x3D; 心跳 &lt;&#x3D;&#x3D; 服务</p>
+<p>API网关 &#x3D;&#x3D;&gt; GET ip,port &#x3D;&#x3D;&gt; consul</p>
+<p>下载consul和启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker pull hashicorp/consul<br><br><span class="hljs-comment"># 启动主节点，-bootstrap-expect 2表示有连个子节点</span><br>docker run --name consul1 -d -p 8500:8500 -p 8301:8301 -p 8302:8302 hashicorp/consul agent -server -bootstrap-expect 2 -ui -<span class="hljs-built_in">bind</span>=0.0.0.0 -client=0.0.0.0	<span class="hljs-comment">#启动并绑定第一个节点</span><br><br>docker inspect --format <span class="hljs-string">&#x27;&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;&#x27;</span> consul1	<span class="hljs-comment">#绑定内网的一个网卡</span><br><br><span class="hljs-comment"># 启动子节点</span><br>docker run --name consul2 -d -p 8501:8500 hashicorp/consul agent -server -<span class="hljs-built_in">bind</span>=0.0.0.0 -client=0.0.0.0 -<span class="hljs-built_in">join</span>=172.17.0.2	<span class="hljs-comment">#将第二个consul节点join加入到绑定网卡输出的地址</span><br><br>docker run --name consul3 -d -p 8502:8500 hashicorp/consul agent -server -<span class="hljs-built_in">bind</span>=0.0.0.0 -client=0.0.0.0 -<span class="hljs-built_in">join</span>=172.17.0.2	<span class="hljs-comment">#将第三个consul节点join加入到绑定网卡输出的地址</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>HTTP服务器</div>
+      <div>http://yoursite.com/2024/08/25/HTTP服务器/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Qinzhi2022</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年8月25日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/22/Ubuntu%E9%85%8D%E7%BD%AE/" title="Ubuntu自用配置">
+                        <span class="hidden-mobile">Ubuntu自用配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div>Moon&wisdom | A learning blog</div> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
